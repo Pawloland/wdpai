@@ -3,15 +3,22 @@
 // enable all php exceptions to be caught by the debugger and passed to phpstorm to stop on the line that caused them
 // https://www.jetbrains.com/help/phpstorm/debugging-with-php-exception-breakpoints.html#php-exception-breakpoints
 
-echo 'Hi there 👋';
+require 'Routing.php';
 
-//show info.php - should include info about xdebug if it is set up correctly
-phpinfo();
-
-
-// write come code that will error out
-echo $notdefinedvar; // this should throw a warning and pause on the line and not show the error in the browser frontend
+$path = trim($_SERVER['REQUEST_URI'], '/');
+$path = parse_url($path, PHP_URL_PATH);
 
 
+Router::get('', 'DefaultController');
+Router::get('projects', 'ProjectController');
+Router::post('login', 'SecurityController');
+Router::post('addProject', 'ProjectController');
+Router::post('register', 'SecurityController');
+Router::post('search', 'ProjectController');
+Router::get('like', 'ProjectController');
+Router::get('dislike', 'ProjectController');
+Router::get('map', 'MapController');
+Router::get('places', 'MapController');
 
+Router::run($path);
 

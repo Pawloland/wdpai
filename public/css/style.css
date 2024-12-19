@@ -1,0 +1,88 @@
+:root {
+    --background-color: #002131;
+    --header-background-color: #002e49;
+    --main-color: #fcfecd;
+    --header-color: white;
+}
+
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    font-family: sans-serif;
+}
+
+header {
+    box-sizing: border-box;
+    background-color: var(--header-background-color);
+    color: var(--header-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header > ul > li {
+    display: inline;
+}
+
+header > ul > li > a {
+    color: white;
+    text-decoration: none;
+    padding: 1em;
+    display: inline-flex; /* Make the link behave like inline text */
+    align-items: center; /* Align text and icon vertically */
+    cursor: pointer; /* Ensures the cursor changes to a pointer when hovering */
+}
+
+
+header > ul > li > a:hover > .icon {
+    background-color: var(--main-color);
+}
+
+.icon-home {
+    mask: url("/public/img/home.svg");
+}
+
+.icon-pen {
+    mask: url("/public/img/pen.svg");
+}
+
+.icon {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    margin-right: 5px;
+}
+
+header > ul > li > a:hover {
+    color: var(--main-color);
+}
+
+header > ul > li > a > object {
+    height: 16px; /* Adjust height for better visibility */
+    margin-right: 8px; /* Space between SVG and text */
+    display: inline-block; /* Ensure it's inline */
+    vertical-align: middle; /* Align with the text */
+    pointer-events: none; /* Allow clicks to pass through to the <a> element */
+}
+
+main {
+    background: url("/public/img/bg_c.png") var(--background-color) 50% / cover no-repeat;
+    background-blend-mode: lighten;
+    background-position-y: bottom;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
