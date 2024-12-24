@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="public/css/style.css">
-    <link rel="stylesheet" type="text/css" href="public/css/auth_form.css">
-    <link rel="icon" type="image/png" href="public/img/logo.png">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/auth_form.css">
+    <link rel="icon" type="image/png" href="/public/img/logo.png">
+    <script src="/public/js/hamburger.js" defer></script>
     <title>LOGIN PAGE</title>
 </head>
 
 <body>
 
 <header>
-    <img src="public/img/logo.png" alt="Biletron" width="100" height="100">
+    <img src="/public/img/logo.png" alt="Biletron" width="100" height="100">
     <h1>Logowanie</h1>
     <ul>
         <li>
@@ -26,13 +27,21 @@
             </a>
         </li>
     </ul>
+    <ul>
+        <li>
+            <a>
+                <span class="icon icon-hamburger"></span>
+            </a>
+        </li>
+    </ul>
 </header>
 <main>
     <form class="auth">
         <label for="email">E-mail:</label>
-        <input id="email" type="text" name="email">
+        <input id="email" type="email" name="email">
         <label for="passwd">Hasło:</label>
         <input id="passwd" type="password" name="password">
+        <input type="submit" value="Zaloguj">
     </form>
 </main>
 
