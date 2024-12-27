@@ -1045,7 +1045,7 @@ BEGIN
         operation_type
     )
     VALUES (
-               OLD.ID_Client,
+               OLD."ID_Client",
                OLD.client_name,
                OLD.client_surname,
                OLD.nick,
@@ -1080,7 +1080,7 @@ BEGIN
         operation_type
     )
     VALUES (
-               OLD.ID_Client,
+               OLD."ID_Client",
                OLD.client_name,
                OLD.client_surname,
                OLD.nick,
