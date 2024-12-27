@@ -1010,23 +1010,19 @@ $$ LANGUAGE plpgsql;
 -- ----------------------------
 -- Event structure for delete_old_screening
 -- ----------------------------
--- DROP EVENT IF EXISTS `delete_old_screening`;
--- delimiter ;;
--- CREATE EVENT `delete_old_screening`
--- ON SCHEDULE
--- EVERY '1' WEEK STARTS '2024-06-11 18:42:22'
--- DO delete from Screening where DATEDIFF(NOW(),start_time) > 365
--- ;;
--- delimiter ;
+-- Check if pg_cron extension is installed (it should be by now)
+CREATE EXTENSION IF NOT EXISTS pg_cron; --
+-- Drop the cron job if it exists
+SELECT cron.unschedule(jobid) FROM cron.job WHERE jobname = 'delete_old_screening';
 
 -- Schedule the job to run every week
--- SELECT cron.schedule(
---                'delete_old_screening',                      -- Job name
---                '0 0 * * 1',                                -- Every Monday at midnight
---                $$
---         DELETE FROM Screening
---         WHERE start_time < NOW() - INTERVAL '365 days';
---     $$);
+SELECT cron.schedule(
+'delete_old_screening', -- Job name
+'0 0 * * 1',            -- Every Monday at midnight
+$$
+    DELETE FROM Screening
+    WHERE start_time < NOW() - INTERVAL '365 days';
+$$);
 
 
 -- ----------------------------
