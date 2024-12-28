@@ -2,3 +2,4 @@
 .idea
 docker/pgadmin/*
 !docker/pgadmin/.gitkeep
+.env
