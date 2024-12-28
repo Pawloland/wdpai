@@ -6,27 +6,27 @@ RUN apk add --no-cache $PHPIZE_DEPS linux-headers\
     && docker-php-ext-enable xdebug \
     && apk del $PHPIZE_DEPS
 
-ENV RUN_DEPS \
+ENV RUN_DEPS="\
     zlib \
     libzip \
     libpng \
     libjpeg-turbo \
-    postgresql-libs
+    postgresql-libs"
 
-ENV BUILD_DEPS \
+ENV BUILD_DEPS="\
     zlib-dev \
     libzip-dev \
     libpng-dev \
     libjpeg-turbo-dev \
-    postgresql-dev
+    postgresql-dev"
 
-ENV PHP_EXTENSIONS \
+ENV PHP_EXTENSIONS="\
     opcache \
     zip \
     gd \
     bcmath \
     pgsql \
-    pdo_pgsql
+    pdo_pgsql"
 
 RUN apk add --no-cache --virtual .build-deps $BUILD_DEPS \
     && docker-php-ext-configure gd --with-jpeg \
