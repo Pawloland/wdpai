@@ -1,8 +1,8 @@
 FROM postgres:17.2-bookworm
 
-ENV POSTGRES_PASSWORD docker
-ENV POSTGRES_DB db
-ENV POSTGRES_USER docker
+# Define the build argument
+ARG POSTGRES_DB
+
 RUN apt update && apt install -y ca-certificates
 RUN yes | /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
 RUN apt update
