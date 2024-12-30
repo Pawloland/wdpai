@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
     <link rel="stylesheet" type="text/css" href="/public/css/auth_form.css">
-    <link rel="icon" type="image/png" href="/public/img/logo.png">
+    <link rel="icon" type="image/png" href="/public/img/assets/logo.png">
     <script src="/public/js/hamburger.js" defer></script>
     <title>REGISTER PAGE</title>
 </head>
@@ -11,7 +11,7 @@
 <body>
 
 <header>
-    <img src="/public/img/logo.png" alt="Biletron" width="100" height="100">
+    <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Rejestracja</h1>
     <ul>
         <li>

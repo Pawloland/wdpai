@@ -10,6 +10,8 @@ $path = parse_url($path, PHP_URL_PATH);
 
 
 Router::get('', 'DefaultController');
+Router::post('upload', 'UploadController');
+Router::post('admin_panel', 'UploadController');
 Router::get('projects', 'ProjectController');
 Router::post('login', 'SecurityController');
 Router::post('addProject', 'ProjectController');
@@ -21,4 +23,3 @@ Router::get('map', 'MapController');
 Router::get('places', 'MapController');
 
 Router::run($path);
-

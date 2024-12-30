@@ -1,10 +1,15 @@
+<?php
+require_once 'src/repository/MovieRepository.php';
+$movieRepository = new MovieRepository();
+?>
+
 <!DOCTYPE html>
 
 <head>
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
     <link rel="stylesheet" type="text/css" href="/public/css/movie_select.css">
     <link rel="stylesheet" type="text/css" href="/public/css/poster.css">
-    <link rel="icon" type="image/png" href="/public/img/logo.png">
+    <link rel="icon" type="image/png" href="/public/img/assets/logo.png">
     <script src="/public/js/hamburger.js" defer></script>
     <title>SELECT MOVIE PAGE</title>
 </head>
@@ -12,7 +17,7 @@
 <body>
 
 <header>
-    <img src="/public/img/logo.png" alt="Biletron" width="100" height="100">
+    <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Twój system do kupowania biletów on-line!</h1>
     <ul>
         <li>
@@ -38,9 +43,9 @@
 </header>
 <main>
     <?php
-    for ($i = 0; $i < 50; $i++) {
-        $imagePath = '/public/img/wv.jpg';
-        $title = 'Deadpool & Wolverine';
+    foreach ($movieRepository->getAllMovies() as $movie) {
+        $imagePath = '/public/img/posters/' . $movie->poster;
+        $title = $movie->title;
         include 'components/poster.php';
     }
     ?>

@@ -94,15 +94,15 @@ header > ul > li > a:hover > .icon {
 }
 
 .icon-hamburger {
-    mask: url("/public/img/hamburger.svg");
+    mask: url("/public/img/assets/hamburger.svg");
 }
 
 .icon-home {
-    mask: url("/public/img/home.svg");
+    mask: url("/public/img/assets/home.svg");
 }
 
 .icon-pen {
-    mask: url("/public/img/pen.svg");
+    mask: url("/public/img/assets/pen.svg");
 }
 
 .icon {
@@ -128,7 +128,7 @@ header > ul > li > a > object {
 }
 
 main {
-    background: url("/public/img/bg_c.png") var(--background-color) 50% / cover no-repeat;
+    background: url("/public/img/assets/bg_c.png") var(--background-color) 50% / cover no-repeat;
     background-blend-mode: lighten;
     background-position-y: bottom;
     height: 100%;

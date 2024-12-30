@@ -12,6 +12,8 @@ CREATE TABLE "Client" (
     UNIQUE ("nick"),
     UNIQUE ("mail")
 );
+ALTER SEQUENCE "Client_ID_Client_seq" RESTART WITH 31;
+
 -- ----------------------------
 -- Records of Client
 -- ----------------------------
@@ -89,6 +91,7 @@ CREATE TABLE "Discount" (
     "amount" NUMERIC(10, 2) NOT NULL CHECK ("amount" >= 0),
     UNIQUE ("discount_name")
 );
+ALTER SEQUENCE "Discount_ID_Discount_seq" RESTART WITH 6;
 
 -- ----------------------------
 -- Records of Discount
@@ -110,7 +113,7 @@ CREATE TABLE "Genre" (
     "genre_name" VARCHAR(40) NOT NULL,
     UNIQUE ("genre_name")
 );
-
+ALTER SEQUENCE "Genre_ID_Genre_seq" RESTART WITH 10;
 
 -- ----------------------------
 -- Records of Genre
@@ -134,7 +137,7 @@ CREATE TABLE "Hall" (
     "hall_name" VARCHAR(40) DEFAULT NULL,
     UNIQUE ("hall_name")
 );
-
+ALTER SEQUENCE "Hall_ID_Hall_seq" RESTART WITH 7;
 
 -- ----------------------------
 -- Records of Hall
@@ -157,7 +160,7 @@ CREATE TABLE "Item" (
     "vat_percentage" NUMERIC(4, 2) NOT NULL,
     UNIQUE ("item_name")
 );
-
+ALTER SEQUENCE "Item_ID_item_seq" RESTART WITH 32;
 
 -- ----------------------------
 -- Records of Item
@@ -184,7 +187,7 @@ CREATE TABLE "Language" (
     UNIQUE ("language_name"),
     UNIQUE ("code")
 );
-
+ALTER SEQUENCE "Language_ID_Language_seq" RESTART WITH 12;
 
 -- ----------------------------
 -- Records of Language
@@ -210,6 +213,7 @@ CREATE TABLE "Movie" (
     "original_title" VARCHAR(80) NOT NULL,
     "duration" TIME NOT NULL,
     "description" VARCHAR(500) DEFAULT NULL,
+    poster uuid DEFAULT gen_random_uuid(),
     "ID_Language" INT NOT NULL,
     "ID_Dubbing" INT DEFAULT NULL,
     "ID_Subtitles" INT DEFAULT NULL,
@@ -223,18 +227,18 @@ CREATE INDEX "fk_movie_dubbing" ON "Movie" ("ID_Dubbing");
 CREATE INDEX "fk_movie_subtitles" ON "Movie" ("ID_Subtitles");
 -- Full-text search index for "description" column
 -- CREATE INDEX "desc_gin" ON "Movie" USING GIN (to_tsvector('english', "description"));
-
+ALTER SEQUENCE "Movie_ID_Movie_seq" RESTART WITH 49;
 
 -- ----------------------------
 -- Records of Movie
 -- ----------------------------
-INSERT INTO "Movie" VALUES (1, 'To connect to a database                ', 'The On Startup feature                  ', '00:09:13', 'The On Startup feature                  ', 9, 2, 2);
-INSERT INTO "Movie" VALUES (2, 'Sometimes you win, sometimes you learn.', 'In a Telnet session,                    ', '00:09:59', 'Sometimes you win, sometimes you learn.', 8, 8, 8);
-INSERT INTO "Movie" VALUES (3, 'If it scares you, it                    ', 'The past has no power                   ', '01:52:25', 'The past has no power                   ', 6, 9, 9);
-INSERT INTO "Movie" VALUES (4, 'Champions keep playing                  ', 'Import Wizard allows                    ', '01:12:03', 'Import Wizard allows                    Import Wizard allows                    ', 1, 1, 1);
-INSERT INTO "Movie" VALUES (5, 'To connect to a database                ', 'All the Navicat Cloud                   ', '00:58:59', 'All the Navicat Cloud                   All the Navicat Cloud                   All the Navicat Cloud                   ', 7, 8, 8);
-INSERT INTO "Movie" VALUES (6, 'It wasn’t raining when                ', 'If opportunity doesn’t                ', '00:24:32', 'If opportunity doesn’t                ', 5, 3, 3);
-INSERT INTO "Movie" VALUES (7, 'Secure SHell (SSH) is                   ', 'Success consists of going               ', '00:19:26', 'If opportunity doesn’t                If opportunity doesn’t                If opportunity doesn’t                ', 10, 10, 10);
+INSERT INTO "Movie" VALUES (1, 'To connect to a database                ', 'The On Startup feature                  ', '00:09:13', 'The On Startup feature                  ','0cbe328d-91b2-4846-8096-deae13600792', 9, 2, 2);
+INSERT INTO "Movie" VALUES (2, 'Sometimes you win, sometimes you learn.', 'In a Telnet session,                    ', '00:09:59', 'Sometimes you win, sometimes you learn.', '47ffc826-3168-4be9-ae86-15a7f7267b52',8, 8, 8);
+INSERT INTO "Movie" VALUES (3, 'If it scares you, it                    ', 'The past has no power                   ', '01:52:25', 'The past has no power                   ', '895d5b81-8108-4eec-abfd-bd6094794aad',6, 9, 9);
+INSERT INTO "Movie" VALUES (4, 'Champions keep playing                  ', 'Import Wizard allows                    ', '01:12:03', 'Import Wizard allows                    Import Wizard allows                    ','51641d93-f38d-4ae6-907f-1f25dd0987bd', 1, 1, 1);
+INSERT INTO "Movie" VALUES (5, 'To connect to a database                ', 'All the Navicat Cloud                   ', '00:58:59', 'All the Navicat Cloud                   All the Navicat Cloud                   All the Navicat Cloud                   ', 'c264e624-8552-425d-9e5a-212c9cc23faa',7, 8, 8);
+INSERT INTO "Movie" VALUES (6, 'It wasn’t raining when                ', 'If opportunity doesn’t                ', '00:24:32', 'If opportunity doesn’t                ', '71af3233-9ceb-4c31-a833-4401b8eb79b7',5, 3, 3);
+INSERT INTO "Movie" VALUES (7, 'Secure SHell (SSH) is                   ', 'Success consists of going               ', '00:19:26', 'If opportunity doesn’t                If opportunity doesn’t                If opportunity doesn’t                ', '884dd11c-5548-4ead-aa5e-72ffc589fde3',10, 10, 10);
 
 -- ----------------------------
 -- Table structure for Movie_Genre
@@ -273,7 +277,7 @@ CREATE TABLE "Permissions" (
     "perm_name" VARCHAR(60) NOT NULL,
     UNIQUE ("perm_name")
 );
-
+ALTER SEQUENCE "Permissions_ID_Perm_seq" RESTART WITH 5;
 
 -- ----------------------------
 -- Records of Permissions
@@ -301,7 +305,7 @@ CREATE TABLE "Purchase" (
 -- Indexes
 CREATE INDEX "id_item" ON "Purchase" ("ID_Item");
 CREATE INDEX "id_clie" ON "Purchase" ("ID_Client");
-
+ALTER SEQUENCE "Purchase_ID_Purchase_seq" RESTART WITH 4;
 
 -- ----------------------------
 -- Records of Purchase
@@ -323,7 +327,7 @@ CREATE TABLE "Screening_Type" (
 );
 -- Unique Index
 CREATE UNIQUE INDEX "screening_name" ON "Screening_Type" ("screening_name");
-
+ALTER SEQUENCE "Screening_Type_ID_Screening_Type_seq" RESTART WITH 5;
 
 -- ----------------------------
 -- Records of Screening_Type
@@ -354,7 +358,7 @@ CREATE TABLE "Screening" (
 CREATE INDEX "fk_screening_movie" ON "Screening" ("ID_Movie");
 CREATE INDEX "fk_screening_hall" ON "Screening" ("ID_Hall");
 CREATE INDEX "fk_screening_screening_type" ON "Screening" ("ID_Screening_Type");
-
+ALTER SEQUENCE "Screening_ID_Screening_seq" RESTART WITH 1001;
 
 -- ----------------------------
 -- Records of Screening
@@ -401,6 +405,7 @@ CREATE TABLE "Seat_Type" (
 );
 -- Unique Index
 CREATE UNIQUE INDEX "seat_name" ON "Seat_Type" ("seat_name");
+ALTER SEQUENCE "Seat_Type_ID_Seat_Type_seq" RESTART WITH 4;
 
 -- ----------------------------
 -- Records of Seat_Type
@@ -428,6 +433,7 @@ CREATE TABLE "Seat" (
 -- Indexes
 CREATE INDEX "fk_seat_hall" ON "Seat" ("ID_Hall");
 CREATE INDEX "fk_seat_seat_type" ON "Seat" ("ID_Seat_Type");
+ALTER SEQUENCE "Seat_ID_Seat_seq" RESTART WITH 14;
 
 -- ----------------------------
 -- Records of Seat
@@ -456,6 +462,7 @@ CREATE TABLE "User_Type" (
     -- Unique index on "type_name"
     CONSTRAINT "type_name_unique" UNIQUE ("type_name")
 );
+ALTER SEQUENCE "User_Type_ID_User_Type_seq" RESTART WITH 7;
 
 -- ----------------------------
 -- Records of User_Type
@@ -481,7 +488,7 @@ CREATE TABLE "User" (
 );
 -- Index
 CREATE INDEX "fk_user_type" ON "User" ("ID_User_Type");
-
+ALTER SEQUENCE "User_ID_User_seq" RESTART WITH 35;
 
 -- ----------------------------
 -- Records of User
@@ -571,8 +578,7 @@ CREATE INDEX "idx_id_client" ON "Forum" ("ID_Client");
 
 -- PostgreSQL does not support FULLTEXT indexing natively like MariaDB. You can use a GIN index for text search:
 -- CREATE INDEX "content_gin" ON "Forum" USING GIN (to_tsvector('english', "content"));
-
-
+ALTER SEQUENCE "Forum_ID_Comment_seq" RESTART WITH 49;
 
 -- ----------------------------
 -- Records of Forum
@@ -630,8 +636,7 @@ CREATE UNIQUE INDEX "seat_screening" ON "Reservation" ("ID_Seat", "ID_Screening"
 CREATE INDEX "fk_reservation_screening" ON "Reservation" ("ID_Screening");
 CREATE INDEX "fk_reservation_discount" ON "Reservation" ("ID_Discount");
 CREATE INDEX "ID_Client" ON "Reservation" ("ID_Client");
-
-
+ALTER SEQUENCE "Reservation_ID_Reservation_seq" RESTART WITH 1562;
 
 
 -- ----------------------------
