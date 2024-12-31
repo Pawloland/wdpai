@@ -28,10 +28,13 @@ class Router
         $action = $urlParts[0];
 
         if (!array_key_exists($action, self::$routes)) {
-            die("Wrong url!");
+//            die("Wrong url!");
+            $controller = self::$routes[''];
+            $action = 'not_found';
+        } else {
+            $controller = self::$routes[$action];
         }
 
-        $controller = self::$routes[$action];
         $object = new $controller;
         $action = $action ?: 'index';
 

@@ -9,4 +9,9 @@ class DefaultController extends AppController
     {
         $this->render('select_movie');
     }
+
+    public function not_found(): void
+    {
+        $this->render('404');
+    }
 }
