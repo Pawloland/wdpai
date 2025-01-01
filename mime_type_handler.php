@@ -21,5 +21,11 @@ debug_log($mimeType);
 
 // Serve the file with the correct MIME type
 header("Content-Type: $mimeType");
+const ONE_YEAR_IN_SECONDS = 31536000;
+
+// Serve the file with the correct MIME type
+header("Content-Type: $mimeType");
+header("Cache-Control: public, max-age=" . ONE_YEAR_IN_SECONDS);
+header("Expires: " . gmdate("D, d M Y H:i:s", time() + ONE_YEAR_IN_SECONDS) . " GMT");
 readfile($filePath);
 
