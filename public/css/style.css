@@ -135,6 +135,7 @@ main {
     display: flex;
     justify-content: center;
     overflow: auto;
+    padding: 10px;
 }
 
 input[type="submit"] {

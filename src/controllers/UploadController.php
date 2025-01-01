@@ -28,6 +28,24 @@ class UploadController extends AppController
             return;
         }
 
+
+        //validate the image file to be of mimetype image using equivalent to file linux command
+        //filesize is limited first by nginx and second by PHP, so we don't need to check it
+        if (!isset($_FILES["image"]) || $_FILES["image"]["error"] != 0) {
+            $this->render('admin_panel', ['messages' => ['File too big']]);
+            return;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $_FILES["image"]["tmp_name"]);
+        finfo_close($finfo);
+        if (!$mimeType) {
+            $mimeType = mime_content_type($_FILES["image"]["tmp_name"]);
+        }
+        if (!$mimeType || !str_contains($mimeType, "image")) {
+            $this->render('admin_panel', ['messages' => ["File not an image"]]);
+            return;
+        }
         $title = $_POST['title'];
         $original_title = $_POST['original_title'];
         $duration = $_POST['duration'];
@@ -35,8 +53,6 @@ class UploadController extends AppController
         $language = $_POST['language'];
         $dubbing = $_POST['dubbing'];
         $subtitles = $_POST['subtitles'];
-//        $image = $_POST['image'];
-
 
         $movie = new Movie($title, $original_title, $duration, $description, $language, $dubbing, $subtitles, '');
         $movie->poster = $this->movieRepository->addMovie($movie);

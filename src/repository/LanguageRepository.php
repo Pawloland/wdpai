@@ -35,7 +35,14 @@ class LanguageRepository extends Repository
     public function getAllLanguagesKV(): array
     {
         $query = '
-            SELECT "ID_Language", "language_name" FROM "Language" ORDER BY "language_name"
+            SELECT "ID_Language", "language_name" FROM "Language"
+            ORDER BY 
+                CASE 
+                    WHEN "language_name" = \'polish\' THEN 1
+                    WHEN "language_name" = \'english\' THEN 2
+                    WHEN "language_name" = \'ukrainian\' THEN 3
+                    ELSE 4
+                END, "language_name"
         ';
 
         $result = [];

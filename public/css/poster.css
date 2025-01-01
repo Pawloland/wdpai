@@ -2,9 +2,12 @@ div.poster {
     width: 214px;
     height: 323px;
     flex-shrink: 0;
-    box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.42);
+    box-shadow: 10px 10px 5px 0 rgba(0, 0, 0, 0.42);
 
     border-radius: 10px;
+    background-position: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 

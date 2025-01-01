@@ -77,7 +77,7 @@ $languageRepository = new LanguageRepository();
         include 'components/select.php';
         ?>
 
-        <label for="poster">Poster:</label>
+        <label for="poster">Poster (2MiB max):</label>
         <input id="poster" type="file" name="image" required accept="image/png, image/gif, image/jpeg">
 
         <input type="submit" value="Upload">

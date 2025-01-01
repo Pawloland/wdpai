@@ -1,3 +1,3 @@
-<div class="poster" style="background: url('<?php echo $imagePath ?? ''; ?>') lightgray 50% / cover no-repeat;">
+<div class="poster" style="background-image: url('<?php echo $imagePath ?? ''; ?>');">
     <div class="overlay"><?php echo $title ?? ''; ?></div>
 </div>
