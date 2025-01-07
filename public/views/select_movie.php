@@ -6,6 +6,7 @@ $movieRepository = new MovieRepository();
 <!DOCTYPE html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
     <link rel="stylesheet" type="text/css" href="/public/css/movie_select.css">
     <link rel="stylesheet" type="text/css" href="/public/css/poster.css">
@@ -52,26 +53,4 @@ $movieRepository = new MovieRepository();
 
 </main>
 
-
-<!--<div class="container">-->
-<!--    <div class="logo">-->
-<!--        <img src="public/img/logo.png">-->
-<!--    </div>-->
-<!--    <div class="login-container">-->
-<!--        <form class="login" action="login" method="POST">-->
-<!--            <div class="messages">-->
-<!--                --><?php
-//                if (isset($messages)) {
-//                    foreach ($messages as $message) {
-//                        echo $message;
-//                    }
-//                }
-//                ?>
-<!--            </div>-->
-<!--            <input name="email" type="text" placeholder="email@email.com">-->
-<!--            <input name="password" type="password" placeholder="password">-->
-<!--            <button type="submit">LOGIN</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
 </body>

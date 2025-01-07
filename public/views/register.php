@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
     <link rel="stylesheet" type="text/css" href="/public/css/auth_form.css">
     <link rel="icon" type="image/png" href="/public/img/assets/logo.png">

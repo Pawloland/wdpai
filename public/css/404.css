@@ -1,0 +1,13 @@
+main > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: var(--main-color);
+    font-size: 2rem;
+}
+
+main > div > a {
+    color: var(--main-color);
+}

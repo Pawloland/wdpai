@@ -4,6 +4,7 @@
 // https://www.jetbrains.com/help/phpstorm/debugging-with-php-exception-breakpoints.html#php-exception-breakpoints
 
 require 'Routing.php';
+session_start(); //to handle redirection messages
 
 $path = trim($_SERVER['REQUEST_URI'], '/');
 $path = parse_url($path, PHP_URL_PATH);

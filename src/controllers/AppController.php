@@ -22,10 +22,15 @@ class AppController
     protected function render(?string $template = null, array $variables = []): void
     {
         $templatePath = 'public/views/' . $template . '.php';
-        $output = 'File not found';
+
+//        $output = 'File not found';
+        //extract variables from $_Session array and overwrite the keys with the values from the $variables array
+
 
         if (file_exists($templatePath)) {
-            extract($variables);
+//            extract($variables);
+            extract($_SESSION['messages'] ?? []);
+            unset($_SESSION['messages']);
 
             ob_start();
             include $templatePath;
