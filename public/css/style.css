@@ -2,6 +2,8 @@
     --background-color: #002131;
     --header-background-color: #002e49;
     --header-background-color-rgb: 0, 46, 73;
+    --header-background-color-subtracted-overlay: #0083d1;
+    --overlay-color: #000000a6;
     --main-color: #fcfecd;
     --header-color: white;
     --action-color: #D10127;
@@ -74,9 +76,20 @@ header > ul:last-child {
         flex-direction: column;
         justify-content: flex-start;
         align-items: end;
-        background-color: var(--header-background-color);
+        background-color: var(--header-background-color-subtracted-overlay);
         padding: 0;
         margin: 0;
+        z-index: 1;
+    }
+
+    header > ul.active::before {
+        content: "";
+        display: block;
+        position: fixed;
+        width: 100dvw;
+        height: 100dvh;
+        z-index: -1;
+        background-color: var(--overlay-color);
     }
 
     header > ul.active > li {

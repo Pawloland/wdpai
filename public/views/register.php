@@ -37,37 +37,16 @@
     </ul>
 </header>
 <main>
-    <form class="auth">
+    <form class="auth" method="post" action="/register">
         <label for="email">E-mail:</label>
-        <input id="email" type="email" name="email">
-        <label for="passwd">Hasło:</label>
-        <input id="passwd" type="password" name="password">
-        <label for="passwd_rep">Powtórz hasło:</label>
-        <input id="passwd_rep" type="password" name="password">
+        <input id="email" type="email" name="email" value="<?= $defaults['email'] ?? ''; ?>" required>
+        <label for="password">Hasło:</label>
+        <input id="password" type="password" name="password" minlength="8" required>
+        <label for="password_rep">Powtórz hasło:</label>
+        <input id="password_rep" type="password" name="password_rep" minlength="8" required>
         <input type="submit" value="Zarejestruj">
+        <label><?= $message ?? ''; ?></label>
     </form>
 </main>
 
-
-<!--<div class="container">-->
-<!--    <div class="logo">-->
-<!--        <img src="public/img/logo.png">-->
-<!--    </div>-->
-<!--    <div class="login-container">-->
-<!--        <form class="login" action="login" method="POST">-->
-<!--            <div class="messages">-->
-<!--                --><?php
-//                if (isset($messages)) {
-//                    foreach ($messages as $message) {
-//                        echo $message;
-//                    }
-//                }
-//                ?>
-<!--            </div>-->
-<!--            <input name="email" type="text" placeholder="email@email.com">-->
-<!--            <input name="password" type="password" placeholder="password">-->
-<!--            <button type="submit">LOGIN</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
 </body>

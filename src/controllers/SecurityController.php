@@ -19,32 +19,33 @@ class SecurityController extends AppController
     {
         if (!$this->isPost()) {
             $this->render('login');
-            $this->userRepository->getAllUsers();
             return;
         }
 
-        $email = $_POST['email'];
-        $password = md5($_POST['password']);
+        try {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+        } catch (Exception $e) {
+            $this->render('login', [
+                'message' => 'Niepoprawne dane'
+            ]);
+            return;
+        }
 
         $user = $this->userRepository->getUser($email);
-
-        if (!$user) {
-            $this->render('login', ['messages' => ['User not found!']]);
+        if (!$user || !password_verify($password, $user->password)) {
+            $this->render('login', [
+                'message' => 'Niepoprawny email lub hasło',
+                'defaults' => ['email' => $email]
+            ]);
             return;
         }
 
-        if ($user->email !== $email) {
-            $this->render('login', ['messages' => ['User with this email not exist!']]);
-            return;
-        }
+        $this->render('login', [
+            'message' => 'Zalogowano pomyślnie'
+        ]);
 
-        if ($user->password !== $password) {
-            $this->render('login', ['messages' => ['Wrong password!']]);
-            return;
-        }
 
-        $url = "http://$_SERVER[HTTP_HOST]";
-        header("Location: {$url}/projects");
     }
 
     public function register(): void
@@ -54,23 +55,46 @@ class SecurityController extends AppController
             return;
         }
 
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirmedPassword = $_POST['confirmedPassword'];
-        $name = $_POST['name'];
-        $surname = $_POST['surname'];
-        $phone = $_POST['phone'];
-
-        if ($password !== $confirmedPassword) {
-            $this->render('register', ['messages' => ['Please provide proper password']]);
+        try {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $password_rep = $_POST['password_rep'];
+        } catch (Exception $e) {
+            $this->render('register', [
+                'message' => 'Niepoprawne dane'
+            ]);
             return;
         }
 
-        //TODO try to use better hash function
-        $user = new User($email, md5($password), $name, $surname);
+        if ($password !== $password_rep) {
+            $this->render('register', [
+                'message' => 'Różne hasła',
+                'defaults' => ['email' => $email]
+            ]);
+            return;
+        } else if (strlen($password) < 8) {
+            $this->render('register', [
+                'message' => 'Hasło za krótkie',
+                'defaults' => ['email' => $email]
+            ]);
+            return;
 
-        $this->userRepository->addUser($user);
+        }
+        // generate password hash using bcrypt
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $user = new User($email, $hash, '', '');
 
-        $this->render('login', ['messages' => ['You\'ve been succesfully registrated!']]);
+        try {
+            $this->userRepository->addUser($user);
+        } catch (Exception $e) {
+            $this->render('register', [
+                'message' => 'Użytkownik o podanym adresie email już istnieje',
+                'defaults' => ['email' => $email]
+            ]);
+            return;
+        }
+
+        $_SESSION['messages'] = ['message' => 'Zarejestrowano pomyślnie - zaloguj się'];
+        header('Location: /login');
     }
 }

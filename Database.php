@@ -2,13 +2,16 @@
 
 class Database
 {
+    private static ?Database $instance = null;
+
     private readonly string $username;
     private readonly string $password;
     private readonly string $host;
     private readonly string $port;
     private readonly string $database;
 
-    public function __construct()
+    // Make the constructor private to enforce singleton
+    private function __construct()
     {
         $this->username = getenv('POSTGRES_USER');
         $this->password = getenv('POSTGRES_PASSWORD');
@@ -18,6 +21,16 @@ class Database
         $this->database = getenv('POSTGRES_DB');
     }
 
+    // Static method to get the single instance of the class
+    public static function getInstance(): Database
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    // Provide a connection method that remains unchanged
     public function connect()
     {
         try {
@@ -29,12 +42,19 @@ class Database
 
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
             return $conn;
         } catch (PDOException $e) {
-            //TODO: error page redirect
+
+            // TODO: error page redirect
             die("Connection failed: " . $e->getMessage());
+
         }
     }
 
-    //TODO: disconnect method
+    public function disconnect(PDO &$connection): void
+    {
+        // Disconnect from database by destroying the PDO object
+        $connection = null;
+    }
 }

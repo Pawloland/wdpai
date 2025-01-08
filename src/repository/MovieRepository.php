@@ -65,23 +65,22 @@ class MovieRepository extends Repository
 
     public function addMovie(Movie $movie): string
     {
-        $stmt = $this->database->connect()->prepare('
+        $new_movie = $this->getDB('
             INSERT INTO "Movie" ("title", "original_title", "duration", "description", "ID_Language", "ID_Dubbing", "ID_Subtitles")
             VALUES (?, ?, ?, ?, ?, ?, ?)
             RETURNING *
-        ');
-
-        $stmt->execute([
+        ',
             $movie->title,
             $movie->original_title,
             $movie->duration,
             $movie->description,
             $movie->language,
             $movie->dubbing,
-            $movie->subtitles,
-        ]);
+            $movie->subtitles
+        );
 
-        return $stmt->fetch(PDO::FETCH_ASSOC)['poster'];
+
+        return $new_movie['poster'];
 
     }
 }

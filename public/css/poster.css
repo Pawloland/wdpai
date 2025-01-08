@@ -36,3 +36,7 @@ div.poster > div.overlay {
     font-weight: 400;
     line-height: normal;
 }
+
+a {
+    text-decoration: none;
+}

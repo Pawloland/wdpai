@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/public/css/poster.css">
     <link rel="icon" type="image/png" href="/public/img/assets/logo.png">
     <script src="/public/js/hamburger.js" defer></script>
+    <script src="/public/js/select_place.js" defer></script>
     <title>SELECT PLACE PAGE</title>
 </head>
 
@@ -88,10 +89,14 @@
             </div>
         </div>
         <div class="details">
-            <label for="date">Data</label>
-            <input type="date" id="date" name="date" required>
-            <label for="time">Godzina startu</label>
-            <input type="time" id="time" name="time" required>
+            <label for="start">Data i godzina startu</label>
+            <select id="start" name="start">
+                <option value="1">Poniedziałek 12:00</option>
+                <option value="2">Wtorek 12:00</option>
+                <option value="3">Środa 12:00</option>
+                <option value="4">Czwartek 12:00</option>
+                <option value="5">Piątek 12:00</option>
+            </select>
             <div class="summary">
                 <span>Typ biletu</span>
                 <span>Ilość</span>

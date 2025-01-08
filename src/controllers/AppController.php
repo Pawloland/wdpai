@@ -28,7 +28,7 @@ class AppController
 
 
         if (file_exists($templatePath)) {
-//            extract($variables);
+            extract($variables);
             extract($_SESSION['messages'] ?? []);
             unset($_SESSION['messages']);
 

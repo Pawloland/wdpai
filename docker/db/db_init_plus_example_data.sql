@@ -995,7 +995,7 @@ DECLARE
     -- Declare any necessary variables (if needed)
 BEGIN
     -- Start the transaction
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    -- SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
     -- Check if the nickname or email already exists
     IF EXISTS (SELECT 1 FROM "Client" WHERE nick = vNick OR mail = vMail) THEN
@@ -1007,7 +1007,7 @@ BEGIN
     VALUES (vCname, vCsurname, vNick, vPassHash, vMail);
 
     -- Commit the transaction
-    COMMIT;
+    -- COMMIT;
 END;
 $$ LANGUAGE plpgsql;
 

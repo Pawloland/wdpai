@@ -11,16 +11,9 @@ $path = parse_url($path, PHP_URL_PATH);
 
 
 Router::get('', 'DefaultController');
+Router::post('login', 'SecurityController');
+Router::post('register', 'SecurityController');
+Router::get('select_place', 'ReservationController');
 Router::post('upload', 'UploadController');
 Router::post('admin_panel', 'UploadController');
-Router::get('projects', 'ProjectController');
-Router::post('login', 'SecurityController');
-Router::post('addProject', 'ProjectController');
-Router::post('register', 'SecurityController');
-Router::post('search', 'ProjectController');
-Router::get('like', 'ProjectController');
-Router::get('dislike', 'ProjectController');
-Router::get('map', 'MapController');
-Router::get('places', 'MapController');
-
 Router::run($path);
