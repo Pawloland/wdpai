@@ -44,7 +44,7 @@ $languageRepository = new LanguageRepository();
     </ul>
 </header>
 <main>
-    <div>
+    <div id="first">
 
 
         <form action="/upload" method="post" enctype="multipart/form-data">
@@ -79,7 +79,7 @@ $languageRepository = new LanguageRepository();
                         <label for="description">opis</label>
                     </th>
                     <td>
-                        <textarea id="description" name="description" required><?= $defaults['description'] ?? ''; ?></textarea>
+                        <textarea id="description" maxlength="500" name="description" required><?= $defaults['description'] ?? ''; ?></textarea>
                     </td>
                 </tr>
                 <tr>

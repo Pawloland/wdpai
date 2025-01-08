@@ -136,12 +136,12 @@ input[type="text"]::placeholder {
 @media (max-width: 820px) {
     main {
         flex-direction: column;
+        justify-content: flex-start;
     }
 
-    main > div.left {
-        margin-top: 530px;
-    }
-
+    /*main > div.left {*/
+    /*    margin-top: 530px;*/
+    /*}*/
     main > form.right {
         flex-direction: column;
         padding: 20px;

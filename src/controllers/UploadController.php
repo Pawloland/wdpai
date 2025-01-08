@@ -35,7 +35,7 @@ class UploadController extends AppController
         $title = $_POST['title'];
         $original_title = $_POST['original_title'];
         $duration = $_POST['duration'];
-        $description = $_POST['description'];
+        $description = substr(trim($_POST['description']), 0, 500);
         $language = $_POST['language'];
         $dubbing = $_POST['dubbing'];
         $subtitles = $_POST['subtitles'];

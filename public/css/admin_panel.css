@@ -15,10 +15,15 @@ main > div {
     flex: 1;
     margin: 10px;
     min-width: 300px;
-    overflow: hidden;
+    overflow: auto;
     box-sizing: border-box;
     align-items: center;
     justify-content: center;
+
+}
+
+#first {
+    flex: unset;
 }
 
 main > div > form {
@@ -67,6 +72,8 @@ main > div > form > table > tbody > tr > td > * {
 }
 
 main > div > form > table > tbody > tr > td > textarea {
-    resize: vertical;
+    /*resize: vertical;*/
+    white-space: pre;
+    overflow: clip;
 }
 
