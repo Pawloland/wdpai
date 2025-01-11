@@ -1,3 +1,8 @@
+-- enable PL/pgSQL Debugger API
+CREATE SCHEMA IF NOT EXISTS debugger;
+CREATE EXTENSION IF NOT EXISTS pldbgapi SCHEMA debugger;
+
+
 -- ----------------------------
 -- Table structure for Client
 -- ----------------------------
@@ -783,10 +788,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- ----------------------------
--- Procedure structure for displayComments
+-- Procedure structure for display_comments
 -- ----------------------------
-DROP FUNCTION IF EXISTS displayComments;
-CREATE OR REPLACE FUNCTION displayComments(movie_id INT)
+DROP FUNCTION IF EXISTS display_comments;
+CREATE OR REPLACE FUNCTION display_comments(movie_id INT)
     RETURNS TABLE (
                       ID_Comment INT,
                       ID_ParentComment INT,
@@ -1029,6 +1034,23 @@ $$
     WHERE start_time < NOW() - INTERVAL '365 days';
 $$);
 
+-- ----------------------------
+-- Event structure for delete_expired_sessions
+-- ----------------------------
+-- Drop the cron job if it exists
+SELECT cron.unschedule(jobid) FROM cron.job WHERE jobname = 'delete_expired_sessions';
+
+-- Schedule the job to run every day at midnight
+SELECT cron.schedule(
+'delete_expired_sessions', -- Job name
+'0 0 * * *',               -- Every day at midnight
+$$
+    DELETE FROM "Client_sessions"
+    WHERE "expiration_date" < NOW();
+    DELETE FROM "User_sessions"
+    WHERE "expiration_date" < NOW();
+$$);
+
 
 -- ----------------------------
 -- Triggers structure for table Client
@@ -1121,3 +1143,180 @@ CREATE TRIGGER check_stars
     BEFORE INSERT ON "Forum"
     FOR EACH ROW
 EXECUTE FUNCTION check_stars_func();
+
+-- ----------------------------
+-- Table structure for Client_sessions
+-- ----------------------------
+DROP TABLE IF EXISTS "Client_sessions" CASCADE;
+CREATE TABLE "Client_sessions" (
+    "ID_Session_Client" SERIAL PRIMARY KEY,
+    "ID_Client" INT NOT NULL,
+    "session_token" VARCHAR(80) UNIQUE NOT NULL,
+    "expiration_date" TIMESTAMP NOT NULL,
+    FOREIGN KEY ("ID_Client") REFERENCES "Client" ("ID_Client") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ----------------------------
+-- Table structure for User_sessions
+-- ----------------------------
+DROP TABLE IF EXISTS "User_sessions" CASCADE;
+CREATE TABLE "User_sessions" (
+    "ID_Session_User" SERIAL PRIMARY KEY,
+    "ID_User" INT NOT NULL,
+    "session_token" VARCHAR(80) UNIQUE NOT NULL,
+    "expiration_date" TIMESTAMP NOT NULL,
+    FOREIGN KEY ("ID_User") REFERENCES "User" ("ID_User") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- ----------------------------
+-- Function for creating a new session
+-- ----------------------------
+DROP FUNCTION IF EXISTS create_session;
+CREATE OR REPLACE FUNCTION create_session(
+    p_id INT,
+    p_type CHAR(1),
+    p_days INT,
+    p_hours INT,
+    p_minutes INT
+)
+    RETURNS VARCHAR(80) AS $$
+DECLARE
+    v_session_token VARCHAR(80) := gen_random_uuid()::text;
+    v_expiration_date TIMESTAMP := NOW() + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
+BEGIN
+    IF p_type = 'c' THEN
+        INSERT INTO "Client_sessions" ("ID_Client", "session_token", "expiration_date")
+        VALUES (p_id, v_session_token, v_expiration_date);
+    ELSIF p_type = 'u' THEN
+        INSERT INTO "User_sessions" ("ID_User", "session_token", "expiration_date")
+        VALUES (p_id, v_session_token, v_expiration_date);
+    ELSE
+        RETURN NULL;
+    END IF;
+    RETURN v_session_token;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ----------------------------
+-- Function for checking if a session exists and is not expired
+-- ----------------------------
+DROP FUNCTION IF EXISTS check_session;
+CREATE OR REPLACE FUNCTION check_session(
+    p_id INT,
+    p_type CHAR(1),
+    p_session_token VARCHAR(80),
+    p_days INT,
+    p_hours INT,
+    p_minutes INT
+)
+    RETURNS BOOLEAN AS $$
+DECLARE
+    v_expiration_date TIMESTAMP := NOW() + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
+    v_table_name TEXT;
+    v_id_column TEXT;
+    v_cursor REFCURSOR; -- Cursor for dynamic query
+    v_cursor_portal TEXT;
+    v_session_row RECORD; -- Row type to store fetched session
+    v_result BOOLEAN := FALSE;
+BEGIN
+    -- Determine the table and ID column based on the type
+    IF p_type = 'c' THEN
+        v_table_name := 'Client_sessions';
+        v_id_column := 'ID_Client';
+    ELSIF p_type = 'u' THEN
+        v_table_name := 'User_sessions';
+        v_id_column := 'ID_User';
+    ELSE
+        RETURN FALSE;
+    END IF;
+
+    -- Escape table and column names
+    v_table_name := quote_ident(v_table_name);
+    v_id_column := quote_ident(v_id_column);
+    p_session_token := quote_literal(p_session_token);
+
+    -- Open a cursor dynamically with escaped variables
+    OPEN v_cursor FOR EXECUTE '
+        SELECT *
+        FROM ' || v_table_name || '
+        WHERE ' || v_id_column || ' = ' || p_id || '
+          AND session_token = ' || p_session_token || '
+        FOR UPDATE';
+
+    -- Store the portal name of the cursor for WHERE CURRENT OF in dynamic EXECUTE https://post.bytes.com/forum/topic/postgresql/776821-plpgsql-update-cursor-where-current-of-with-dynamic-query
+    v_cursor_portal := quote_ident(v_cursor::text);
+
+    -- Fetch the session row
+    FETCH v_cursor INTO v_session_row;
+
+    -- Check if the row was found
+    IF NOT FOUND THEN
+        -- No session found, return FALSE
+        CLOSE v_cursor;
+        RETURN FALSE;
+    END IF;
+
+    -- Check expiration date and decide to update or delete
+    IF v_session_row.expiration_date <= NOW() THEN
+        -- Expired session, delete the row using WHERE CURRENT OF
+        EXECUTE '
+            DELETE FROM ' || v_table_name || '
+            WHERE CURRENT OF' || v_cursor_portal;
+
+        v_result := FALSE;
+    ELSE
+        -- Valid session, update expiration date using WHERE CURRENT OF
+        EXECUTE '
+            UPDATE ' || v_table_name || '
+            SET expiration_date = ' || quote_literal(v_expiration_date) || '
+            WHERE CURRENT OF' || v_cursor_portal;
+
+        v_result := TRUE;
+    END IF;
+
+    -- Close the cursor and return the result
+    CLOSE v_cursor;
+    RETURN v_result;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ----------------------------
+-- Function for deleting a session
+-- ----------------------------
+DROP FUNCTION IF EXISTS delete_session;
+CREATE OR REPLACE FUNCTION delete_session(
+    p_id INT,
+    p_type CHAR(1),
+    p_session_token VARCHAR(80)
+)
+    RETURNS BOOLEAN AS $$
+DECLARE
+    v_table_name TEXT;
+    v_id_column TEXT;
+BEGIN
+    -- Determine the table and ID column based on the type
+    IF p_type = 'c' THEN
+        v_table_name := 'Client_sessions';
+        v_id_column := 'ID_Client';
+    ELSIF p_type = 'u' THEN
+        v_table_name := 'User_sessions';
+        v_id_column := 'ID_User';
+    ELSE
+        RETURN FALSE;
+    END IF;
+
+    -- Escape table and column names
+    v_table_name := quote_ident(v_table_name);
+    v_id_column := quote_ident(v_id_column);
+    p_session_token := quote_literal(p_session_token);
+
+    -- Delete the session row
+    EXECUTE '
+        DELETE FROM ' || v_table_name || '
+        WHERE ' || v_id_column || ' = ' || p_id || '
+          AND session_token = ' || p_session_token;
+
+    -- Return TRUE if the row was deleted
+    RETURN FOUND;
+END;
+$$ LANGUAGE plpgsql;

@@ -120,6 +120,10 @@ header > ul > li > a:hover > .icon {
     mask: url("/public/img/assets/pen.svg");
 }
 
+.icon-logout {
+    mask: url("/public/img/assets/logout.svg");
+}
+
 .icon {
     display: inline-block;
     width: 25px;
@@ -128,6 +132,7 @@ header > ul > li > a:hover > .icon {
     mask-size: contain;
     mask-repeat: no-repeat;
     margin-right: 5px;
+    mask-position: center;
 }
 
 header > ul > li > a:hover {

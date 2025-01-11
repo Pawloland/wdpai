@@ -21,18 +21,27 @@ $movieRepository = new MovieRepository();
     <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Twój system do kupowania biletów on-line!</h1>
     <ul>
-        <li>
-            <a href="/login">
-                <span class="icon icon-pen"></span>
-                Zaloguj
-            </a>
-        </li>
-        <li>
-            <a href="/register">
-                <span class="icon icon-pen"></span>
-                Zarejestruj
-            </a>
-        </li>
+        <?php if (isset($_SESSION['email'])): ?>
+            <li>
+                <a href="/logout">
+                    <span class="icon icon-logout"></span>
+                    <?= $_SESSION['email'] ?>
+                </a>
+            </li>
+        <?php else: ?>
+            <li>
+                <a href="/login">
+                    <span class="icon icon-pen"></span>
+                    Zaloguj
+                </a>
+            </li>
+            <li>
+                <a href="/register">
+                    <span class="icon icon-pen"></span>
+                    Zarejestruj
+                </a>
+            </li>
+        <?php endif; ?>
     </ul>
     <ul>
         <li>
