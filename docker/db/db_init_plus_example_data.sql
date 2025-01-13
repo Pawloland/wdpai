@@ -1152,7 +1152,7 @@ CREATE TABLE "Client_sessions" (
     "ID_Session_Client" SERIAL PRIMARY KEY,
     "ID_Client" INT NOT NULL,
     "session_token" VARCHAR(80) UNIQUE NOT NULL,
-    "expiration_date" TIMESTAMP NOT NULL,
+    "expiration_date" TIMESTAMP WITH TIME ZONE NOT NULL,
     FOREIGN KEY ("ID_Client") REFERENCES "Client" ("ID_Client") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -1164,12 +1164,12 @@ CREATE TABLE "User_sessions" (
     "ID_Session_User" SERIAL PRIMARY KEY,
     "ID_User" INT NOT NULL,
     "session_token" VARCHAR(80) UNIQUE NOT NULL,
-    "expiration_date" TIMESTAMP NOT NULL,
+    "expiration_date" TIMESTAMP WITH TIME ZONE NOT NULL,
     FOREIGN KEY ("ID_User") REFERENCES "User" ("ID_User") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- ----------------------------
--- Function for creating a new session
+-- Function for creating a new session with timezone for output
 -- ----------------------------
 DROP FUNCTION IF EXISTS create_session;
 CREATE OR REPLACE FUNCTION create_session(
@@ -1177,23 +1177,33 @@ CREATE OR REPLACE FUNCTION create_session(
     p_type CHAR(1),
     p_days INT,
     p_hours INT,
-    p_minutes INT
-)
-    RETURNS VARCHAR(80) AS $$
+    p_minutes INT,
+    p_timezone TEXT, -- Timezone parameter for output, using TEXT to avoid SQLi issues
+    OUT session_token VARCHAR(80),
+    OUT expiration_date TIMESTAMP WITHOUT TIME ZONE -- OUT parameter for expiration date
+) AS $$
 DECLARE
-    v_session_token VARCHAR(80) := gen_random_uuid()::text;
-    v_expiration_date TIMESTAMP := NOW() + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
+    v_expiration_date TIMESTAMP WITH TIME ZONE := NOW() AT TIME ZONE 'UTC' + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
 BEGIN
+    session_token := gen_random_uuid()::text;
+
+    -- Insert into corresponding session table based on session type
     IF p_type = 'c' THEN
         INSERT INTO "Client_sessions" ("ID_Client", "session_token", "expiration_date")
-        VALUES (p_id, v_session_token, v_expiration_date);
+        VALUES (p_id, session_token, v_expiration_date);
     ELSIF p_type = 'u' THEN
         INSERT INTO "User_sessions" ("ID_User", "session_token", "expiration_date")
-        VALUES (p_id, v_session_token, v_expiration_date);
+        VALUES (p_id, session_token, v_expiration_date);
     ELSE
-        RETURN NULL;
+        -- Invalid type, return NULL
+        session_token := NULL;
+        expiration_date := NULL;
+        RETURN;
     END IF;
-    RETURN v_session_token;
+
+    -- Set the OUT parameter for the expiration date, converted to the requested timezone
+    expiration_date := v_expiration_date at time zone p_timezone;
+
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1207,18 +1217,23 @@ CREATE OR REPLACE FUNCTION check_session(
     p_session_token VARCHAR(80),
     p_days INT,
     p_hours INT,
-    p_minutes INT
-)
-    RETURNS BOOLEAN AS $$
+    p_minutes INT,
+    p_timezone TEXT,
+    OUT is_valid BOOLEAN,
+    OUT expiration_date TIMESTAMP WITHOUT TIME ZONE -- OUT parameter for expiration date
+
+) AS $$
 DECLARE
-    v_expiration_date TIMESTAMP := NOW() + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
+    v_expiration_date TIMESTAMP WITH TIME ZONE := NOW() AT TIME ZONE 'UTC' + INTERVAL '1 day' * p_days + INTERVAL '1 hour' * p_hours + INTERVAL '1 minute' * p_minutes;
     v_table_name TEXT;
     v_id_column TEXT;
     v_cursor REFCURSOR; -- Cursor for dynamic query
     v_cursor_portal TEXT;
     v_session_row RECORD; -- Row type to store fetched session
-    v_result BOOLEAN := FALSE;
 BEGIN
+    is_valid := FALSE;
+    expiration_date := NULL;
+
     -- Determine the table and ID column based on the type
     IF p_type = 'c' THEN
         v_table_name := 'Client_sessions';
@@ -1227,7 +1242,7 @@ BEGIN
         v_table_name := 'User_sessions';
         v_id_column := 'ID_User';
     ELSE
-        RETURN FALSE;
+        RETURN;
     END IF;
 
     -- Escape table and column names
@@ -1253,7 +1268,7 @@ BEGIN
     IF NOT FOUND THEN
         -- No session found, return FALSE
         CLOSE v_cursor;
-        RETURN FALSE;
+        RETURN;
     END IF;
 
     -- Check expiration date and decide to update or delete
@@ -1263,7 +1278,6 @@ BEGIN
             DELETE FROM ' || v_table_name || '
             WHERE CURRENT OF' || v_cursor_portal;
 
-        v_result := FALSE;
     ELSE
         -- Valid session, update expiration date using WHERE CURRENT OF
         EXECUTE '
@@ -1271,12 +1285,12 @@ BEGIN
             SET expiration_date = ' || quote_literal(v_expiration_date) || '
             WHERE CURRENT OF' || v_cursor_portal;
 
-        v_result := TRUE;
+        is_valid := TRUE;
+        expiration_date := v_expiration_date at time zone p_timezone;
     END IF;
 
     -- Close the cursor and return the result
     CLOSE v_cursor;
-    RETURN v_result;
 END;
 $$ LANGUAGE plpgsql;
 

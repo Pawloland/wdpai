@@ -21,11 +21,11 @@ $movieRepository = new MovieRepository();
     <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Twój system do kupowania biletów on-line!</h1>
     <ul>
-        <?php if (isset($_SESSION['email'])): ?>
+        <?php if (isset($_COOKIE['auth'])): ?>
             <li>
                 <a href="/logout">
                     <span class="icon icon-logout"></span>
-                    <?= $_SESSION['email'] ?>
+                    <?= json_decode($_COOKIE['auth'], true)['email'] ?>
                 </a>
             </li>
         <?php else: ?>

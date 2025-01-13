@@ -32,13 +32,10 @@ class Router
             $action = 'not_found';
         } else {
             $controller = self::$routes[$action];
+            $action = $action ?: 'index'; //if action is empty string, set it to index - method name in DefaultController
         }
 
         $object = new $controller;
-        $action = $action ?: 'index';
-
-        $id = $urlParts[1] ?? '';
-
-        $object->$action($id);
+        $object->$action();
     }
 }
