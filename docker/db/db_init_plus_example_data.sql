@@ -66,7 +66,7 @@ CREATE TABLE "Client_archive" (
     "password_hash" VARCHAR(80) NOT NULL,
     "mail" VARCHAR(120) NOT NULL,
     "operation_type" CHAR(1) CHECK ("operation_type" IN ('d', 'u')),
-    "date" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY ("ID_Client", "date")
 ) PARTITION BY RANGE ("date");  -- Define partitioning by the "date" column.
 -- Create partitions for different ranges of the "date" column.
