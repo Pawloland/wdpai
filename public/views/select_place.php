@@ -19,17 +19,25 @@
     <h1>Rezerwacja</h1>
     <ul>
         <li>
-            <a href="/login">
-                <span class="icon icon-pen"></span>
-                Zaloguj
+            <a href="/">
+                <span class="icon icon-home"></span>
+                Strona główna
             </a>
         </li>
         <li>
-            <a href="/register">
-                <span class="icon icon-pen"></span>
-                Zarejestruj
-            </a>
+            <?php if (isset($_COOKIE['auth'])): ?>
+                <a href="/logout">
+                    <span class="icon icon-logout"></span>
+                    <?= json_decode($_COOKIE['auth'], true)['email'] ?>
+                </a>
+            <?php else: ?>
+                <a href="/register">
+                    <span class="icon icon-pen"></span>
+                    Zarejestruj
+                </a>
+            <?php endif; ?>
         </li>
+
     </ul>
     <ul>
         <li>
@@ -42,13 +50,11 @@
 <main>
     <div class="left">
         <?php
-        if (isset($messages)) {
+        if (isset($messages['movie'])) {
             $movie = $messages['movie'];
-            $imagePath = '/public/img/posters/' . $movie->poster;
+            $ID_Movie = $movie->ID_Movie;
+            $posterID = $movie->poster;
             $title = $movie->title;
-        } else {
-            $imagePath = '/public/img/posters/default';
-            $title = "Missing title";
         }
         include 'components/poster.php';
         ?>

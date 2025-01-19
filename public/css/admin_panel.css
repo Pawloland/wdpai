@@ -22,7 +22,7 @@ main > div {
 
 }
 
-#first {
+#add_movie {
     flex: unset;
 }
 
@@ -54,9 +54,9 @@ main > div > form > table > tbody > tr > td {
     padding: 5px;
 }
 
-main > div > form > table > tbody > tr > td:last-child {
-    text-align: center;
-}
+/*main > div > form > table > tbody > tr > td:last-child {*/
+/*    text-align: center;*/
+/*}*/
 
 
 main > div > form > table > tbody > tr > td > * {
@@ -76,4 +76,22 @@ main > div > form > table > tbody > tr > td > textarea {
     white-space: pre;
     overflow: clip;
 }
+
+.list {
+    max-height: 400px;
+    flex-basis: auto;
+    justify-content: flex-start;
+}
+
+
+.list > form > table > thead > tr > th:first-child,
+.list > form > table > tbody > tr > td:first-child {
+    text-align: right;
+}
+
+.list > form > table > thead > tr > th {
+    text-align: left;
+}
+
+
 

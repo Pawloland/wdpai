@@ -20,6 +20,9 @@ $movieRepository = new MovieRepository();
 <header>
     <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Twój system do kupowania biletów on-line!</h1>
+    <?php if (isset($message)) : ?>
+        <?= $message ?>
+    <?php endif; ?>
     <ul>
         <?php if (isset($_COOKIE['auth'])): ?>
             <li>
@@ -53,8 +56,10 @@ $movieRepository = new MovieRepository();
 </header>
 <main>
     <?php
+    $link = true;
     foreach ($movieRepository->getAllMovies() as $movie) {
-        $imagePath = '/public/img/posters/' . $movie->poster;
+        $ID_Movie = $movie->ID_Movie;
+        $posterID = $movie->poster;
         $title = $movie->title;
         include 'components/poster.php';
     }

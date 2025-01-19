@@ -1,4 +1,5 @@
 -- enable PL/pgSQL Debugger API
+DROP SCHEMA IF EXISTS debugger CASCADE;
 CREATE SCHEMA IF NOT EXISTS debugger;
 CREATE EXTENSION IF NOT EXISTS pldbgapi SCHEMA debugger;
 
@@ -65,7 +66,7 @@ CREATE TABLE "Client_archive" (
     "password_hash" VARCHAR(80) NOT NULL,
     "mail" VARCHAR(120) NOT NULL,
     "operation_type" CHAR(1) CHECK ("operation_type" IN ('d', 'u')),
-    "date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date" TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY ("ID_Client", "date")
 ) PARTITION BY RANGE ("date");  -- Define partitioning by the "date" column.
 -- Create partitions for different ranges of the "date" column.
@@ -300,7 +301,7 @@ CREATE TABLE "Purchase" (
     "ID_Purchase" SERIAL PRIMARY KEY,
     "ID_Item" INT NOT NULL,
     "ID_Client" INT DEFAULT NULL,
-    "purchase_date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "purchase_date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "price_netto" NUMERIC(10, 2) NOT NULL,
     "price_brutto" NUMERIC(10, 2) NOT NULL,
     "ID_order" UUID NOT NULL,
@@ -353,7 +354,7 @@ CREATE TABLE "Screening" (
     "ID_Movie" INT NOT NULL,
     "ID_Hall" INT NOT NULL,
     "ID_Screening_Type" INT NOT NULL,
-    "start_time" TIMESTAMP NOT NULL,
+    "start_time" TIMESTAMP WITH TIME ZONE NULL,
     -- Foreign Keys
     FOREIGN KEY ("ID_Hall") REFERENCES "Hall" ("ID_Hall") ON DELETE RESTRICT ON UPDATE RESTRICT,
     FOREIGN KEY ("ID_Movie") REFERENCES "Movie" ("ID_Movie") ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -391,13 +392,13 @@ INSERT INTO "Screening" VALUES (20, 5, 1, 4, '2018-12-23 21:11:35');
 INSERT INTO "Screening" VALUES (21, 3, 2, 2, '2021-02-03 20:15:53');
 INSERT INTO "Screening" VALUES (22, 5, 4, 4, '2024-06-02 11:53:51');
 INSERT INTO "Screening" VALUES (23, 1, 2, 2, '2023-06-29 17:57:08');
-INSERT INTO "Screening" VALUES (24, 1, 1, 4, '2019-11-15 16:50:33');
-INSERT INTO "Screening" VALUES (25, 6, 2, 1, '2022-08-19 18:53:15');
-INSERT INTO "Screening" VALUES (26, 2, 6, 1, '2023-09-14 14:09:37');
-INSERT INTO "Screening" VALUES (27, 5, 6, 4, '2022-01-22 11:09:57');
-INSERT INTO "Screening" VALUES (28, 4, 5, 4, '2023-01-17 14:44:02');
-INSERT INTO "Screening" VALUES (29, 6, 4, 4, '2024-06-02 14:24:08');
-INSERT INTO "Screening" VALUES (30, 1, 4, 3, '2024-07-03 17:05:51');
+INSERT INTO "Screening" VALUES (24, 1, 1, 4, '2015-11-15 16:50:33');
+INSERT INTO "Screening" VALUES (25, 6, 2, 1, '2025-08-19 18:53:15');
+INSERT INTO "Screening" VALUES (26, 2, 6, 1, '2025-09-14 14:09:37');
+INSERT INTO "Screening" VALUES (27, 5, 6, 2, '2025-01-22 11:09:57');
+INSERT INTO "Screening" VALUES (28, 4, 5, 4, '2026-01-17 14:44:02');
+INSERT INTO "Screening" VALUES (29, 6, 4, 2, '2025-06-02 14:24:08');
+INSERT INTO "Screening" VALUES (30, 1, 4, 3, '2025-07-03 17:05:51');
 
 -- ----------------------------
 -- Table structure for Seat_Type
@@ -472,12 +473,11 @@ ALTER SEQUENCE "User_Type_ID_User_Type_seq" RESTART WITH 7;
 -- ----------------------------
 -- Records of User_Type
 -- ----------------------------
-INSERT INTO "User_Type" VALUES (5, 'Administrator');
 INSERT INTO "User_Type" VALUES (1, 'Cashier');
 INSERT INTO "User_Type" VALUES (2, 'Chief operations officer');
-INSERT INTO "User_Type" VALUES (6, 'Client');
 INSERT INTO "User_Type" VALUES (3, 'Manager');
 INSERT INTO "User_Type" VALUES (4, 'Scheduler');
+INSERT INTO "User_Type" VALUES (5, 'Administrator');
 
 -- ----------------------------
 -- Table structure for User
@@ -486,48 +486,27 @@ DROP TABLE IF EXISTS "User" CASCADE;
 CREATE TABLE "User" (
     "ID_User" SERIAL PRIMARY KEY,
     "ID_User_Type" INT NOT NULL,
-    "user_name" VARCHAR(40),
-    "user_surname" VARCHAR(40),
+    "user_name" VARCHAR(40) NOT NULL,
+    "user_surname" VARCHAR(40) NOT NULL,
+    "nick" VARCHAR(40) NOT NULL UNIQUE,
+    "password_hash" VARCHAR(80) NOT NULL,
     -- Foreign Key
     CONSTRAINT "fk_user_type" FOREIGN KEY ("ID_User_Type") REFERENCES "User_Type" ("ID_User_Type") ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 -- Index
 CREATE INDEX "fk_user_type" ON "User" ("ID_User_Type");
-ALTER SEQUENCE "User_ID_User_seq" RESTART WITH 35;
+ALTER SEQUENCE "User_ID_User_seq" RESTART WITH 7;
 
 -- ----------------------------
 -- Records of User
 -- ----------------------------
-INSERT INTO "User" VALUES (1, 6, 'Larry', 'Stevens');
-INSERT INTO "User" VALUES (2, 6, 'Luis', 'Boyd');
-INSERT INTO "User" VALUES (3, 6, 'Leroy', 'Moreno');
-INSERT INTO "User" VALUES (4, 6, 'Anne', 'Butler');
-INSERT INTO "User" VALUES (5, 6, 'Marjorie', 'Ruiz');
-INSERT INTO "User" VALUES (6, 6, 'Scott', 'Castillo');
-INSERT INTO "User" VALUES (7, 6, 'Juan', 'Diaz');
-INSERT INTO "User" VALUES (8, 6, 'Leonard', 'Dunn');
-INSERT INTO "User" VALUES (9, 6, 'Joseph', 'Spencer');
-INSERT INTO "User" VALUES (10, 6, 'Alice', 'Schmidt');
-INSERT INTO "User" VALUES (11, 6, 'Daniel', 'Owens');
-INSERT INTO "User" VALUES (12, 6, 'Dawn', 'Silva');
-INSERT INTO "User" VALUES (13, 6, 'Marie', 'Ramirez');
-INSERT INTO "User" VALUES (14, 6, 'Jennifer', 'Foster');
-INSERT INTO "User" VALUES (15, 6, 'Richard', 'Gutierrez');
-INSERT INTO "User" VALUES (16, 6, 'Douglas', 'Brown');
-INSERT INTO "User" VALUES (17, 6, 'Joyce', 'Perez');
-INSERT INTO "User" VALUES (18, 6, 'Jane', 'Brooks');
-INSERT INTO "User" VALUES (19, 6, 'Billy', 'Mendez');
-INSERT INTO "User" VALUES (20, 6, 'Walter', 'Alvarez');
-INSERT INTO "User" VALUES (21, 6, 'Julia', 'Stone');
-INSERT INTO "User" VALUES (22, 6, 'Travis', 'Mills');
-INSERT INTO "User" VALUES (23, 6, 'Eugene', 'Bryant');
-INSERT INTO "User" VALUES (24, 6, 'Lori', 'Butler');
-INSERT INTO "User" VALUES (25, 6, 'Margaret', 'Brooks');
-INSERT INTO "User" VALUES (26, 6, 'Teresa', 'Sanders');
-INSERT INTO "User" VALUES (27, 6, 'Ann', 'Washington');
-INSERT INTO "User" VALUES (28, 6, 'Wanda', 'Coleman');
-INSERT INTO "User" VALUES (29, 6, 'Angela', 'West');
-INSERT INTO "User" VALUES (30, 6, 'Ricky', 'Owens');
+INSERT INTO "User" VALUES (1, 5, 'Larry', 'Stevens', 'larry_stevens', 'hashed_password1');
+INSERT INTO "User" VALUES (2, 5, 'Luis', 'Boyd', 'luis_boyd', 'hashed_password2');
+INSERT INTO "User" VALUES (3, 5, 'Leroy', 'Moreno', 'leroy_moreno', 'hashed_password3');
+INSERT INTO "User" VALUES (4, 5, 'Anne', 'Butler', 'anne_butler', 'hashed_password4');
+INSERT INTO "User" VALUES (5, 5, 'Marjorie', 'Ruiz', 'marjorie_ruiz', 'hashed_password5');
+INSERT INTO "User" VALUES (6, 5, 'Scott', 'Castillo', 'scott_castillo', 'hashed_password6');
+
 
 -- ----------------------------
 -- Table structure for UserType_Permissions
@@ -622,7 +601,7 @@ CREATE TABLE "Reservation" (
     "total_price_netto" NUMERIC(10, 2) NOT NULL,
     "total_price_brutto" NUMERIC(10, 2) NOT NULL,
     "vat_percentage" NUMERIC(4, 2) NOT NULL,
-    "reservation_date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reservation_date" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "NIP" VARCHAR(10) DEFAULT NULL,
     "NRB" VARCHAR(26) DEFAULT NULL,
     "address_street" VARCHAR(100) DEFAULT NULL,
@@ -906,7 +885,7 @@ CREATE OR REPLACE FUNCTION new_reservation(
     vAddress_city VARCHAR(50),
     vAddress_zip VARCHAR(11)
 )
-    RETURNS VOID AS
+    RETURNS "Reservation" AS
 $$
 DECLARE
     price_netto DECIMAL(10,2);
@@ -976,7 +955,8 @@ BEGIN
                vAddress_flat,
                vAddress_city,
                vAddress_zip
-           );
+           )
+    RETURNING *;
 
 END;
 $$ LANGUAGE plpgsql;

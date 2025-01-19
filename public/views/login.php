@@ -22,10 +22,17 @@
             </a>
         </li>
         <li>
-            <a href="/register">
-                <span class="icon icon-pen"></span>
-                Zarejestruj
-            </a>
+            <?php if (isset($_COOKIE['auth'])): ?>
+                <a href="/logout">
+                    <span class="icon icon-logout"></span>
+                    <?= json_decode($_COOKIE['auth'], true)['email'] ?>
+                </a>
+            <?php else: ?>
+                <a href="/register">
+                    <span class="icon icon-pen"></span>
+                    Zarejestruj
+                </a>
+            <?php endif; ?>
         </li>
     </ul>
     <ul>

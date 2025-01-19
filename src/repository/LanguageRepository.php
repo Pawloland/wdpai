@@ -11,18 +11,10 @@ class LanguageRepository extends Repository
      */
     public function getAllLanguages(): array
     {
-        $query = '
-            SELECT "language_name", "code" FROM "Language"
-        ';
-
-        $result = [];
-        foreach ($this->getDB($query) as $language) {
-            $result[] = new Language(
-                $language["language_name"],
-                $language["code"]
-            );
-        }
-        return $result;
+        return $this->getDBClassesArray(
+            Language::class,
+            'SELECT * FROM "Language"'
+        );
     }
 
     /**
@@ -46,21 +38,10 @@ class LanguageRepository extends Repository
         ';
 
         $result = [];
-        foreach ($this->getDB($query) as $language) {
+        foreach ($this->getDBAssocArray($query) as $language) {
             $result[$language["ID_Language"]] = $language["language_name"];
         }
         return $result;
 
-    }
-
-    /**
-     * @return array<array{ID_Language: int, language_name: string, code: string}>
-     */
-    private function getAllLanguagesDB(): array
-    {
-        $query = '
-            SELECT "ID_Language", "language_name", "code" FROM "Language"
-        ';
-        return $this->getDB($query);
     }
 }

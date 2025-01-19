@@ -2,7 +2,7 @@
 
 // to easier find the log entries in the console, we will prefix them with [CUSTOM_DEBUG_LOG]
 //in phpstorm a grep console plugin can be used to filter out the debug logs in real time
-
+// since phpstorm 2024.3 xdebug_notify is supported in debug console https://www.jetbrains.com/phpstorm/whatsnew/#version-2024-3-debugging
 // setup:
 // 1. Install the grep console and live plugins in phpstorm, then restart the IDE.
 // https://plugins.jetbrains.com/plugin/7125-grep-console
@@ -91,4 +91,11 @@ static void registerFunction(String functionName, Object function) {
 function debug_log(string $text): void
 {
     error_log("[CUSTOM_DEBUG_LOG]" . $text);
+    xdebug_notify($text);
+}
+
+function debug_dump(string $text, mixed $variable)
+{
+    error_log("[CUSTOM_DEBUG_LOG] " . $text . " " . var_export($variable, true));
+    xdebug_notify($text . " " . var_export($variable, true));
 }

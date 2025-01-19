@@ -3,6 +3,8 @@
 require_once 'AppController.php';
 require_once __DIR__ . '/../models/Movie.php';
 require_once __DIR__ . '/../repository/MovieRepository.php';
+require_once __DIR__ . '/../../debug_utils.php';
+
 
 class UploadController extends AppController
 {
@@ -31,6 +33,13 @@ class UploadController extends AppController
         }
         $messages = [];
         $messages['defaults'] = $_POST;
+
+        if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
+            $messages['upload'] = 'Illegal file name';
+            $_SESSION['messages'] = $messages;
+            header('Location: /admin_panel');
+            return;
+        }
 
         $title = $_POST['title'];
         $original_title = $_POST['original_title'];
@@ -64,8 +73,17 @@ class UploadController extends AppController
         }
 
 
-        $movie = new Movie($title, $original_title, $duration, $description, $language, $dubbing, $subtitles, '');
-        $movie->poster = $this->movieRepository->addMovie($movie);
+        $movie = new Movie(
+            title: $title,
+            original_title: $original_title,
+            description: $description,
+            ID_Language: $language,
+            ID_Dubbing: $dubbing,
+            ID_Subtitles: $subtitles
+        );
+        $movie->duration = $duration; // the set property hook will convert the string to DateTime object, but the constructor will not call property hooks
+        // so we need to set the duration manually after the object is created with the default value of new DateTime('1979-01-01 00:00:00') in the constructor
+        $movie = $this->movieRepository->addMovie($movie);
 
         //save the image to the server
 

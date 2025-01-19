@@ -31,7 +31,7 @@ class Database
     }
 
     // Provide a connection method that remains unchanged
-    public function connect()
+    public function connect(string $default_session_postgres_timezone_name = 'UTC'): PDO
     {
         try {
             $conn = new PDO(
@@ -40,8 +40,15 @@ class Database
                 $this->password
             );
 
+
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Set the session-wide default timezone
+
+            // I know it is ugly and maybe less safe than prepared statements, but prepared statements do not work with "SET TIME ZONE ?"
+            $stmt = $conn->prepare("SET TIME ZONE " . $conn->quote($default_session_postgres_timezone_name));
+            $stmt->execute();
 
             return $conn;
         } catch (PDOException $e) {

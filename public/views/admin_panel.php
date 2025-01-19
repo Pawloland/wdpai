@@ -1,15 +1,13 @@
 <?php
 require_once 'src/repository/LanguageRepository.php';
 $languageRepository = new LanguageRepository();
+
 ?>
 <!DOCTYPE html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-    <!--    <link rel="stylesheet" type="text/css" href="/public/css/movie_select.css">-->
-    <!--    <link rel="stylesheet" type="text/css" href="/public/css/poster.css">-->
-    <!--    <link rel="stylesheet" type="text/css" href="/public/css/auth_form.css">-->
     <link rel="stylesheet" type="text/css" href="/public/css/admin_panel.css">
     <link rel="icon" type="image/png" href="/public/img/assets/logo.png">
     <script src="/public/js/hamburger.js" defer></script>
@@ -44,9 +42,7 @@ $languageRepository = new LanguageRepository();
     </ul>
 </header>
 <main>
-    <div id="first">
-
-
+    <div id="add_movie">
         <form action="/upload" method="post" enctype="multipart/form-data">
             <table>
                 <tbody>
@@ -148,7 +144,9 @@ $languageRepository = new LanguageRepository();
         </form>
     </div>
 
-    <div>
+    <?php include 'components/admin_panel/movie_list.php'; ?>
+
+    <div id="add_screening">
         <form action="#" method="post">
             <table>
                 <tbody>
@@ -206,7 +204,8 @@ $languageRepository = new LanguageRepository();
             </table>
         </form>
     </div>
-    <div>
+
+    <div id="remove_screening">
         <form action="#" method="post">
             <table>
                 <tbody>
@@ -253,19 +252,27 @@ $languageRepository = new LanguageRepository();
         </form>
     </div>
 
+    <div id="reservations_list">
+        <p>Rezerwacje</p>
+    </div>
 
-    <div>
-        Klienci:
-    </div>
-    <div>
-        Rezerwacje:
-    </div>
-    <div>
-        Konta administracyjne:
-    </div>
-    <div>
-        Sesje:
-    </div>
+    <?php include 'components/admin_panel/screening_list.php'; ?>
+
+    <?php include 'components/admin_panel/clients_list.php'; ?>
+
+
+
+    <?php include 'components/admin_panel/user_list.php'; ?>
+
+    <?php
+    $show_clients = true;
+    include 'components/admin_panel/sessions_list.php';
+    ?>
+
+    <?php
+    $show_clients = false;
+    include 'components/admin_panel/sessions_list.php';
+    ?>
 
 
     <?php
