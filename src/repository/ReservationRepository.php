@@ -49,6 +49,17 @@ class ReservationRepository extends Repository
         }
     }
 
+//    public function getPotentialNettoPriceForSeatIDAtScreeningID( int $ID_Screening, int $ID_Seat ): string {
+//        try {
+//            return $this->getDBAssocArray(
+//                'SELECT * FROM calculate_price(?, )',
+//                $ID_Reservation
+//            );
+//        } catch (Exception $e) {
+//            return null;
+//        }
+//    }
+
     /**
      * @param int $ID_Screening
      * @return Reservation[]

@@ -57,7 +57,7 @@ $movieRepository = new MovieRepository();
 <main>
     <?php
     $link = true;
-    foreach ($movieRepository->getAllMovies() as $movie) {
+    foreach ($movieRepository->getAllMoviesThatHaveScreeningsNotBeforeDateTime() as $movie) {
         $ID_Movie = $movie->ID_Movie;
         $posterID = $movie->poster;
         $title = $movie->title;

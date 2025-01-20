@@ -1,3 +1,9 @@
+<?php
+require_once 'src/repository/ScreeningRepository.php';
+$screeningRepository = new ScreeningRepository();
+
+?>
+
 <!DOCTYPE html>
 
 <head>
@@ -59,61 +65,45 @@
         include 'components/poster.php';
         ?>
     </div>
-    <form action="#" method="post" class="right">
+    <form class="right">
+        <?php
+        $data = $screeningRepository->getScreeningsByMovieIdAssoc($movie->ID_Movie ?? -1);
+        ?>
         <div class="room">
             <div class="screen">
-                <p>Sala 2</p>
                 <p>
-                    <!--                    <span class="icon icon-pen"></span>-->
-                    Dubbing 2D
+                     
+                    <!-- this will be populated with Hall number from js with data embedded in script tag as json -->
+                </p>
+                <p>
+                     
+                    <!-- this will be populated Screening Type name from js with data embedded in script tag as json -->
                 </p>
             </div>
             <div class="seats">
-                <table>
-                    <?php
-                    $rows = 10;
-                    $cols = 6;
-                    $letters = range('A', 'Z');
-                    for ($i = 0; $i < $rows; $i++): ?>
-                        <tr>
-                            <th><?= $letters[$i] ?></th>
-                            <?php
-                            $cellsInRow = 1;  // Start with the first cell
-                            for ($j = 1; $j < $cols; $j++):
-                                $id = $i * ($cols - 1) + $j;
-                                $cellsInRow++;
-                                ?>
-                                <td>
-                                    <input type="checkbox" id="<?= $id ?>" name="<?= $id ?>">
-                                </td>
-                            <?php endfor;
-                            ?>
-                        </tr>
-                    <?php endfor; ?>
-                </table>
-
+                <!-- this will be populated with seats from js with data embedded in script tag as json -->
             </div>
         </div>
         <div class="details">
-            <label for="start">Data i godzina startu</label>
-            <select id="start" name="start">
-                <option value="1">Poniedziałek 12:00</option>
-                <option value="2">Wtorek 12:00</option>
-                <option value="3">Środa 12:00</option>
-                <option value="4">Czwartek 12:00</option>
-                <option value="5">Piątek 12:00</option>
-            </select>
+            <?php
+            $skip_label = false;
+            $label = 'Data i godzina startu';
+            $name = 'start';
+            $id = 'start';
+            $array = $data['kv'];
+            include 'components/select.php';
+            ?>
             <div class="summary">
                 <span>Typ biletu</span>
                 <span>Ilość</span>
             </div>
             <div class="summary specific">
-                <span>Normalny</span>
-                <span>10</span>
+                <span>Standard</span>
+                <span>0</span>
             </div>
             <div class="summary specific">
-                <span>Ulgowy</span>
-                <span>10</span>
+                <span>Premium</span>
+                <span>0</span>
             </div>
             <input type="text" placeholder="Wpisz kod rabatowy">
 
@@ -125,6 +115,8 @@
         </div>
     </form>
 </main>
-
+<script>
+    let data = JSON.parse(`<?= json_encode($data['data']); ?>`)
+</script>
 
 </body>

@@ -28,6 +28,9 @@ class ReservationController extends AppController
 
         if ($this->isGet()) {
             try {
+                if (!isset($_GET['ID_Movie'])) {
+                    throw new Exception();
+                }
                 $movie = $this->movieRepository->getMovieById($_GET['ID_Movie']);
                 $this->render('select_place', [
                     'messages' => [
@@ -40,6 +43,8 @@ class ReservationController extends AppController
             }
             return;
         }
-        $this->render('select_place');
+        $_SESSION['messages'] = ['message' => 'Niepoprawne żądanie'];
+        header('Location: /');
+
     }
 }

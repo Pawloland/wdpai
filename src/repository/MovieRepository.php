@@ -17,6 +17,27 @@ class MovieRepository extends Repository
         );
     }
 
+    /**
+     * @return Movie[]
+     */
+    public function getAllMoviesThatHaveScreeningsNotBeforeDateTime(DateTime $start = new DateTime('now', new DateTimeZone(Database::CLIENT_TIMEZONE))): array
+    {
+        return $this->getDBClassesArrayTZ(
+            Movie::class,
+            '
+            SELECT *
+            FROM "Movie" 
+            WHERE "ID_Movie" IN (
+                                    SELECT DISTINCT "ID_Movie" 
+                                    FROM "Screening" 
+                                    WHERE "start_time" >= ?
+            )
+            ORDER BY "title"',
+            Database::CLIENT_TIMEZONE,
+            $start->format('Y-m-d H:i:s')
+        );
+    }
+
     public function getMovieById(int $ID_Movie): Movie
     {
         return $this->getDBClass(
