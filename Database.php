@@ -9,6 +9,7 @@ class Database
     private readonly string $host;
     private readonly string $port;
     private readonly string $database;
+    public const string CLIENT_TIMEZONE = 'Europe/Warsaw';
 
     // Make the constructor private to enforce singleton
     private function __construct()
@@ -18,7 +19,7 @@ class Database
         $this->host = "db"; //host is docker-compose service name, not localhost nor POSTGRES_DB env variable
         // it only coincidentally matches the POSTGRES_DB env variable
         $this->port = getenv('PGPORT');
-        $this->database = getenv('POSTGRES_DB');
+        $this->database = getenv('POSTGRES_DB');;
     }
 
     // Static method to get the single instance of the class

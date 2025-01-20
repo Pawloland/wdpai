@@ -83,6 +83,10 @@ main > div > form > table > tbody > tr > td > textarea {
     justify-content: flex-start;
 }
 
+.list > form > table > tbody > tr:hover {
+    background-color: var(--action-color);
+}
+
 
 .list > form > table > thead > tr > th:first-child,
 .list > form > table > tbody > tr > td:first-child {

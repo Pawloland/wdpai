@@ -252,9 +252,7 @@ $languageRepository = new LanguageRepository();
         </form>
     </div>
 
-    <div id="reservations_list">
-        <p>Rezerwacje</p>
-    </div>
+    <?php include 'components/admin_panel/reservations_list.php'; ?>
 
     <?php include 'components/admin_panel/screening_list.php'; ?>
 

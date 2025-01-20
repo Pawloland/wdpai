@@ -10,17 +10,17 @@ class ScreeningRepository extends Repository
      * @return Screening[]
      * @throws Exception
      */
-    public function getAllScreeningsStartingNotBeforeDateTime(DateTime $start = new DateTime("now", new DateTimeZone('Europe/Warsaw'))): array
+    public function getAllScreeningsStartingNotBeforeDateTime(DateTime $start = new DateTime("now", new DateTimeZone(Database::CLIENT_TIMEZONE))): array
     {
         return $this->getDBClassesArrayTZ(
             Screening::class,
             'SELECT * FROM "Screening" WHERE "start_time" >= ? order by "start_time"',
-            'Europe/Warsaw',
+            Database::CLIENT_TIMEZONE,
             $start->format('Y-m-d H:i:s')
         );
     }
 
-    public function getAllScreeningsStartingNotBeforeDateTimeAssoc(DateTime $start = new DateTime("now", new DateTimeZone('Europe/Warsaw'))): array
+    public function getAllScreeningsStartingNotBeforeDateTimeAssoc(DateTime $start = new DateTime("now", new DateTimeZone(Database::CLIENT_TIMEZONE))): array
     {
         return $this->getDBAssocArrayTZ(
             'SELECT 
@@ -35,7 +35,7 @@ class ScreeningRepository extends Repository
             WHERE "start_time" >= ? 
             order by "start_time"
         ',
-            'Europe/Warsaw',
+            Database::CLIENT_TIMEZONE,
             $start->format('Y-m-d H:i:s')
         );
     }

@@ -5,6 +5,37 @@ require_once __DIR__ . '/../models/Reservation.php';
 
 class ReservationRepository extends Repository
 {
+    public function getAllReservationsNotBeforeDateTimeAssoc(DateTime $start = new DateTime('now', new DateTimeZone(Database::CLIENT_TIMEZONE))): array
+    {
+        return $this->getDBAssocArrayTZ(
+            '
+            SELECT 
+                "Reservation"."ID_Reservation",
+                "Client"."mail",
+                "Hall"."ID_Hall",
+                "Reservation"."ID_Seat",
+                "Seat"."row",
+                "Seat"."number",
+                "Seat_Type"."seat_name",
+                "Movie"."title",
+                "Screening_Type"."screening_name",
+                "Screening"."start_time",
+                "Reservation"."total_price_brutto"
+            FROM "Reservation"
+                NATURAL JOIN "Client"
+                NATURAL JOIN "Seat"
+                NATURAL JOIN "Hall"
+                NATURAL JOIN "Seat_Type"
+                JOIN "Screening" ON "Reservation"."ID_Screening" = "Screening"."ID_Screening"
+                NATURAL JOIN "Movie"
+                JOIN "Screening_Type" ON "Screening"."ID_Screening_Type" = "Screening_Type"."ID_Screening_Type"
+            WHERE "Screening"."start_time" >= ?
+            ORDER BY "Screening"."start_time", "Client"."mail"',
+            Database::CLIENT_TIMEZONE,
+            $start->format('Y-m-d H:i:s')
+        );
+    }
+
     public function getReservation(int $ID_Reservation): ?Reservation
     {
         try {

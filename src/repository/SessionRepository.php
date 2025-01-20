@@ -17,8 +17,8 @@ class SessionRepository extends Repository
                 natural join "Client"
             where expiration_date > now()
             ',
-            'Europe/Warsaw',
-            'Europe/Warsaw'
+            Database::CLIENT_TIMEZONE,
+            Database::CLIENT_TIMEZONE
         );
     }
 
