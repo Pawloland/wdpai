@@ -53,7 +53,11 @@ class SecurityComponent
             return false;
         }
         $expiration_date = '';
-        $is_valid = $this->sessionRepository->checkSession($auth['email'], $auth['token'], static::days, static::hours, static::minutes, $expiration_date);
+        try {
+            $is_valid = $this->sessionRepository->checkSession($auth['email'], $auth['token'], static::days, static::hours, static::minutes, $expiration_date);
+        } catch (Exception $e) {
+            $is_valid = false;
+        }
 
         $cookieValue = json_encode(['token' => $auth['token'], 'email' => $auth['email']]);
         setcookie(static::cookie_name, $cookieValue, [

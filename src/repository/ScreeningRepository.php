@@ -119,4 +119,13 @@ class ScreeningRepository extends Repository
         );
 
     }
+
+
+    public function removeScreening(int $ID_Screening): void
+    {
+        $this->getDBAssocArray(
+            'DELETE FROM "Screening" WHERE "ID_Screening" = ?',
+            $ID_Screening
+        );
+    }
 }

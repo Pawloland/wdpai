@@ -47,18 +47,4 @@ class ScreeningController extends AppController
         header('Location: /admin_panel');
     }
 
-//    public function deleteScreening(): void
-//    {
-//        if (!$this->isPost()) {
-//            $this->render('deleteScreening');
-//            return;
-//        }
-//
-//        $screening = new Screening($_POST['date'], $_POST['time'], $_POST['room'], $_POST['movie']);
-//
-//        $this->screeningRepository->deleteScreening($screening);
-//        $this->render('deleteScreening', ['message' => ['Screening deleted']]);
-//    }
-
-
 }

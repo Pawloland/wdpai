@@ -19,7 +19,7 @@ if (isset($show_clients) && $show_clients) {
             <thead>
             <tr>
                 <th>
-                   ID
+                    ID
                 </th>
                 <th>
                     Nick

@@ -32,6 +32,7 @@ if (!isset($screeningRepository)) {
                 <th>
                     Typ
                 </th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -58,6 +59,9 @@ if (!isset($screeningRepository)) {
                     </td>
                     <td>
                         <?= $screening['screening_name']; ?>
+                    </td>
+                    <td>
+                        <span class="icon icon-bin"></span>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -5,7 +5,7 @@ if (!isset($userRepository)) {
 }
 ?>
 
-<div class="list" id="clients_list">
+<div class="list" id="users_list">
     <p>Konta administracyjne: </p>
     <form>
         <table>
@@ -26,6 +26,9 @@ if (!isset($userRepository)) {
                 <th>
                     <label>Nick</label>
                 </th>
+                <th>
+
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -45,6 +48,9 @@ if (!isset($userRepository)) {
                     </td>
                     <td>
                         <?= $user['nick']; ?>
+                    </td>
+                    <td>
+                        <span class="icon icon-bin"></span>
                     </td>
                 </tr>
             <?php endforeach; ?>

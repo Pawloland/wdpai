@@ -21,4 +21,12 @@ class UserRepository extends Repository
         );
     }
 
+    public function removeUser(int $ID_User): void
+    {
+        $this->getDBAssocArray(
+            'DELETE FROM "User" WHERE "ID_User" = ?',
+            $ID_User
+        );
+    }
+
 }

@@ -124,6 +124,10 @@ header > ul > li > a:hover > .icon {
     mask: url("/public/img/assets/logout.svg");
 }
 
+.icon-bin {
+    mask: url("/public/img/assets/bin.svg");
+}
+
 .icon {
     display: inline-block;
     width: 25px;

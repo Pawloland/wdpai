@@ -97,4 +97,20 @@ main > div > form > table > tbody > tr > td > textarea {
 }
 
 
+td:has(span.icon) {
+    padding: 0;
+}
+
+td span.icon {
+    background-color: var(--main-color);
+    border-radius: unset;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+td span.icon:hover {
+    background-color: var(--header-background-color);
+}
+
+
 

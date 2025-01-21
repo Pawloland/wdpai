@@ -17,6 +17,7 @@ $screeningTypeRepository = new ScreeningTypeRepository();
     <link rel="stylesheet" type="text/css" href="/public/css/admin_panel.css">
     <link rel="icon" type="image/png" href="/public/img/assets/logo.png">
     <script src="/public/js/hamburger.js" defer></script>
+    <script src="/public/js/admin_panel.js" defer></script>
     <title>ADMIN PAGE</title>
 </head>
 
@@ -224,52 +225,52 @@ $screeningTypeRepository = new ScreeningTypeRepository();
         </form>
     </div>
 
-    <div id="remove_screening">
-        <form action="#" method="post">
-            <table>
-                <tbody>
-                <tr>
-                    <th>
-                        <label for="ds_date">Data</label>
-                    </th>
-                    <td>
-                        <input id="ds_date" type="date" name="date" required>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="ds_hour">Godzina startu</label>
-                    </th>
-                    <td>
-                        <input id="ds_hour" type="time" name="time" required>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="ds_hall">Sala</label>
-                    </th>
-                    <td>
-                        <select id="ds_hall" name="hall" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <input type="submit" value="Usuń seans">
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <?= $add_screening ?? ''; ?>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
+    <!--    <div id="remove_screening">-->
+    <!--        <form action="#" method="post">-->
+    <!--            <table>-->
+    <!--                <tbody>-->
+    <!--                <tr>-->
+    <!--                    <th>-->
+    <!--                        <label for="ds_date">Data</label>-->
+    <!--                    </th>-->
+    <!--                    <td>-->
+    <!--                        <input id="ds_date" type="date" name="date" required>-->
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--                <tr>-->
+    <!--                    <th>-->
+    <!--                        <label for="ds_hour">Godzina startu</label>-->
+    <!--                    </th>-->
+    <!--                    <td>-->
+    <!--                        <input id="ds_hour" type="time" name="time" required>-->
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--                <tr>-->
+    <!--                    <th>-->
+    <!--                        <label for="ds_hall">Sala</label>-->
+    <!--                    </th>-->
+    <!--                    <td>-->
+    <!--                        <select id="ds_hall" name="hall" required>-->
+    <!--                            <option value="1">1</option>-->
+    <!--                            <option value="2">2</option>-->
+    <!--                            <option value="3">3</option>-->
+    <!--                        </select>-->
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--                <tr>-->
+    <!--                    <td colspan="2">-->
+    <!--                        <input type="submit" value="Usuń seans">-->
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--                <tr>-->
+    <!--                    <td colspan="2">-->
+    <!--                        --><?php //= $add_screening ?? ''; ?>
+    <!--                    </td>-->
+    <!--                </tr>-->
+    <!--                </tbody>-->
+    <!--            </table>-->
+    <!--        </form>-->
+    <!--    </div>-->
 
     <?php include 'components/admin_panel/reservations_list.php'; ?>
 

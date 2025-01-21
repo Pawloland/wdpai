@@ -47,6 +47,7 @@ $data = $reservationRepository->getAllReservationsNotBeforeDateTimeAssoc();
                 <th>
                     Cena brutto
                 </th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -91,6 +92,9 @@ $data = $reservationRepository->getAllReservationsNotBeforeDateTimeAssoc();
                     </td>
                     <td>
                         <?= $reservation['total_price_brutto']; ?> zł
+                    </td>
+                    <td>
+                        <span class="icon icon-bin"></span>
                     </td>
                 </tr>
             <?php endforeach; ?>

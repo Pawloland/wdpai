@@ -80,5 +80,13 @@ class MovieRepository extends Repository
         );
     }
 
+    public function removeMovie(int $ID_Movie): void
+    {
+        $this->getDBAssocArray(
+            'DELETE FROM "Movie" WHERE "ID_Movie" = ?',
+            $ID_Movie
+        );
+    }
+
 
 }

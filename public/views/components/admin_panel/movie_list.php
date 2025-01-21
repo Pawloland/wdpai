@@ -20,6 +20,8 @@ if (!isset($movieRepository)) {
                 <th>
                     Długość
                 </th>
+                <th>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -33,6 +35,9 @@ if (!isset($movieRepository)) {
                     </td>
                     <td>
                         <?= $movie->duration_string; ?>
+                    </td>
+                    <td>
+                        <span class="icon icon-bin"></span>
                     </td>
                 </tr>
             <?php endforeach; ?>

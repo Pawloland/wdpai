@@ -26,6 +26,8 @@ if (!isset($clientRepository)) {
                 <th>
                     <label>Mail</label>
                 </th>
+                <th>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -45,6 +47,9 @@ if (!isset($clientRepository)) {
                     </td>
                     <td>
                         <?= $client->mail; ?>
+                    </td>
+                    <td>
+                        <span class="icon icon-bin"></span>
                     </td>
                 </tr>
             <?php endforeach; ?>

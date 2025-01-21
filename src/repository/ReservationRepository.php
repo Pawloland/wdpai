@@ -160,4 +160,13 @@ class ReservationRepository extends Repository
             throw new Exception('Failed to add reservation: ' . $e->getMessage());
         }
     }
+
+
+    public function removeReservation(int $ID_Reservation): void
+    {
+        $this->getDBAssocArray(
+            'DELETE FROM "Reservation" WHERE "ID_Reservation" = ?',
+            $ID_Reservation
+        );
+    }
 }

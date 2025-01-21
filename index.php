@@ -23,4 +23,10 @@ Router::post('addReservation', 'ReservationController');
 Router::post('upload', 'UploadController');
 Router::post('admin_panel', 'UploadController');
 Router::post('addScreening', 'ScreeningController');
+Router::post('removeMovie', 'AdminController');
+Router::post('removeReservation', 'AdminController');
+Router::post('removeScreening', 'AdminController');
+Router::post('removeClient', 'AdminController');
+Router::post('removeUser', 'AdminController');
+
 Router::run($path);

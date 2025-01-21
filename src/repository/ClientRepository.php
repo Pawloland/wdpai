@@ -47,4 +47,12 @@ class ClientRepository extends Repository
         );
     }
 
+    public function removeClient(int $ID_Client): void
+    {
+        $this->getDBAssocArray(
+            'DELETE FROM "Client" WHERE "ID_Client" = ?',
+            $ID_Client
+        );
+    }
+
 }
