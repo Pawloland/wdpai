@@ -384,7 +384,7 @@ CREATE TABLE "Screening" (
 CREATE INDEX "fk_screening_movie" ON "Screening" ("ID_Movie");
 CREATE INDEX "fk_screening_hall" ON "Screening" ("ID_Hall");
 CREATE INDEX "fk_screening_screening_type" ON "Screening" ("ID_Screening_Type");
-ALTER SEQUENCE "Screening_ID_Screening_seq" RESTART WITH 1001;
+ALTER SEQUENCE "Screening_ID_Screening_seq" RESTART WITH 1020;
 
 -- ----------------------------
 -- Records of Screening
@@ -419,6 +419,27 @@ ALTER SEQUENCE "Screening_ID_Screening_seq" RESTART WITH 1001;
 -- INSERT INTO "Screening" VALUES (28, 4, 5, 4, '2026-01-17 14:44:02');
 -- INSERT INTO "Screening" VALUES (29, 6, 4, 2, '2025-06-02 14:24:08');
 -- INSERT INTO "Screening" VALUES (30, 1, 4, 3, '2025-07-03 17:05:51');
+INSERT INTO "Screening" VALUES (1001, 59, 2, 1, '2026-01-01 09:00:00');
+INSERT INTO "Screening" VALUES (1002, 63, 2, 2, '2026-01-02 09:00:00');
+INSERT INTO "Screening" VALUES (1003, 54, 2, 1, '2026-01-03 09:00:00');
+INSERT INTO "Screening" VALUES (1004, 49, 2, 1, '2026-01-04 09:00:00');
+INSERT INTO "Screening" VALUES (1005, 50, 2, 1, '2026-01-05 09:00:00');
+INSERT INTO "Screening" VALUES (1006, 60, 1, 2, '2026-01-06 09:00:00');
+INSERT INTO "Screening" VALUES (1007, 62, 1, 1, '2026-01-07 09:00:00');
+INSERT INTO "Screening" VALUES (1008, 56, 2, 3, '2026-10-08 09:00:00');
+INSERT INTO "Screening" VALUES (1009, 64, 1, 3, '2026-02-09 09:00:00');
+INSERT INTO "Screening" VALUES (1011, 52, 1, 1, '2026-10-10 08:10:00');
+INSERT INTO "Screening" VALUES (1012, 61, 2, 4, '2026-10-11 09:11:00');
+INSERT INTO "Screening" VALUES (1013, 51, 2, 2, '2026-10-12 08:00:00');
+INSERT INTO "Screening" VALUES (1014, 55, 1, 1, '2026-10-13 08:00:00');
+INSERT INTO "Screening" VALUES (1015, 66, 2, 2, '2026-10-14 08:00:00');
+INSERT INTO "Screening" VALUES (1016, 65, 2, 2, '2026-10-16 08:00:00');
+INSERT INTO "Screening" VALUES (1017, 53, 2, 4, '2026-10-17 08:00:00');
+INSERT INTO "Screening" VALUES (1018, 57, 2, 3, '2026-10-18 10:00:00');
+INSERT INTO "Screening" VALUES (1019, 58, 2, 3, '2026-10-19 08:00:00');
+
+
+
 
 -- ----------------------------
 -- Table structure for Seat_Type
