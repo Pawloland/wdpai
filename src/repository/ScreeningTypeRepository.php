@@ -25,4 +25,17 @@ class ScreeningTypeRepository extends Repository
             return null;
         }
     }
+
+    public function getAllScreeningTypesKV()
+    {
+        $data = $this->getDBAssocArray(
+            'SELECT "ID_Screening_Type", "screening_name" FROM "Screening_Type"'
+        );
+
+        $result = [];
+        foreach ($data as $row) {
+            $result[$row['ID_Screening_Type']] = $row['screening_name'];
+        }
+        return $result;
+    }
 }

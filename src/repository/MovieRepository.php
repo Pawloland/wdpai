@@ -17,6 +17,19 @@ class MovieRepository extends Repository
         );
     }
 
+    public function getAllMoviesKV(): array
+    {
+        $data = $this->getDBAssocArray(
+            'SELECT "ID_Movie", "title" FROM "Movie" order by "title"'
+        );
+
+        $result = [];
+        foreach ($data as $row) {
+            $result[$row['ID_Movie']] = $row['title'];
+        }
+        return $result;
+    }
+
     /**
      * @return Movie[]
      */
@@ -66,4 +79,6 @@ class MovieRepository extends Repository
             $movie->ID_Subtitles
         );
     }
+
+
 }

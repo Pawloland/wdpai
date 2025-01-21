@@ -22,4 +22,5 @@ Router::post('getDiscount', 'ReservationController');
 Router::post('addReservation', 'ReservationController');
 Router::post('upload', 'UploadController');
 Router::post('admin_panel', 'UploadController');
+Router::post('addScreening', 'ScreeningController');
 Router::run($path);

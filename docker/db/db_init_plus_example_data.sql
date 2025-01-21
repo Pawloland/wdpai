@@ -957,7 +957,7 @@ BEGIN
                vAddress_city,
                vAddress_zip
            )
-    RETURNING *INTO reservation_record;
+    RETURNING * INTO reservation_record;
 
     -- Return the inserted reservation record
     RETURN reservation_record;
@@ -965,6 +965,94 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- ----------------------------
+-- Procedure structure for new_screening
+-- ----------------------------
+DROP FUNCTION IF EXISTS new_screening;
+CREATE OR REPLACE FUNCTION new_screening(
+    p_id_movie INTEGER,
+    p_id_hall INTEGER,
+    p_id_screening_type INTEGER,
+    p_start_time TIMESTAMP WITH TIME ZONE,
+    p_buffer_minutes INTEGER DEFAULT 15
+)
+    RETURNS "Screening" AS $$
+DECLARE
+    movie_duration INTERVAL;
+    buffer_interval INTERVAL;
+    new_start_time TIMESTAMP WITH TIME ZONE;
+    new_end_time TIMESTAMP WITH TIME ZONE;
+    new_screening "Screening"; -- Variable to store the newly inserted screening
+BEGIN
+    -- Validate buffer_minutes parameter
+    IF p_buffer_minutes IS NULL OR p_buffer_minutes < 0 THEN
+        RAISE EXCEPTION 'Invalid buffer minutes: % (must be non-null and non-negative)', p_buffer_minutes;
+    END IF;
+
+    -- Convert buffer_minutes to interval
+    buffer_interval := p_buffer_minutes * INTERVAL '1 minute';
+
+    -- Check if Movie ID is valid
+    IF p_id_movie IS NULL OR NOT EXISTS (SELECT 1 FROM "Movie" WHERE "ID_Movie" = p_id_movie) THEN
+        RAISE EXCEPTION 'Invalid Movie ID: %', p_id_movie;
+    END IF;
+
+    -- Check if Hall ID is valid
+    IF p_id_hall IS NULL OR NOT EXISTS (SELECT 1 FROM "Hall" WHERE "ID_Hall" = p_id_hall) THEN
+        RAISE EXCEPTION 'Invalid Hall ID: %', p_id_hall;
+    END IF;
+
+    -- Check if Screening Type ID is valid
+    IF p_id_screening_type IS NULL OR NOT EXISTS (SELECT 1 FROM "Screening_Type" WHERE "ID_Screening_Type" = p_id_screening_type) THEN
+        RAISE EXCEPTION 'Invalid Screening Type ID: %', p_id_screening_type;
+    END IF;
+
+    -- Check if Start Time is valid
+    IF p_start_time IS NULL OR p_start_time < NOW() THEN
+        RAISE EXCEPTION 'Invalid Start Time: %', p_start_time;
+    END IF;
+
+    -- Retrieve the movie's duration
+    SELECT duration
+    INTO movie_duration
+    FROM "Movie"
+    WHERE "ID_Movie" = p_id_movie;
+
+    -- Calculate new time ranges for collision checking
+    new_start_time := p_start_time - buffer_interval;
+    new_end_time := p_start_time + movie_duration + buffer_interval;
+
+    -- Check for time collisions in the given hall
+    IF EXISTS (
+        SELECT 1
+        FROM "Screening"
+            NATURAL JOIN "Movie"
+        WHERE
+            "ID_Hall" = p_id_hall
+            AND NOT (new_start_time >= start_time + duration + buffer_interval)
+            AND NOT (new_end_time <= start_time - buffer_interval)
+    ) THEN
+        RAISE EXCEPTION 'Time collision detected for hall ID % at start time %', p_id_hall, p_start_time;
+    END IF;
+
+    -- Insert the new screening using the original start time
+    INSERT INTO "Screening" (
+        "ID_Movie",
+        "ID_Hall",
+        "ID_Screening_Type",
+        start_time
+    ) VALUES (
+         p_id_movie,
+         p_id_hall,
+         p_id_screening_type,
+         p_start_time
+     )
+    RETURNING * INTO new_screening;
+
+    -- Return the inserted screening
+    RETURN new_screening;
+END;
+$$ LANGUAGE plpgsql;
 
 
 -- ----------------------------

@@ -1,6 +1,12 @@
 <?php
 require_once 'src/repository/LanguageRepository.php';
+require_once 'src/repository/MovieRepository.php';
+require_once 'src/repository/HallRepository.php';
+require_once 'src/repository/ScreeningTypeRepository.php';
 $languageRepository = new LanguageRepository();
+$movieRepository = new MovieRepository();
+$hallRepository = new HallRepository();
+$screeningTypeRepository = new ScreeningTypeRepository();
 
 ?>
 <!DOCTYPE html>
@@ -19,6 +25,9 @@ $languageRepository = new LanguageRepository();
 <header>
     <img src="/public/img/assets/logo.png" alt="Biletron" width="100" height="100">
     <h1>Panel administracyjny</h1>
+    <?php if (isset($message)) : ?>
+        <?= $message ?>
+    <?php endif; ?>
     <ul>
         <li>
             <a href="/login">
@@ -147,35 +156,21 @@ $languageRepository = new LanguageRepository();
     <?php include 'components/admin_panel/movie_list.php'; ?>
 
     <div id="add_screening">
-        <form action="#" method="post">
+        <form action="/addScreening" method="post">
             <table>
                 <tbody>
                 <tr>
                     <th>
-                        <label for="as_date">Data</label>
+                        <label for="as_movie">Film</label>
                     </th>
                     <td>
-                        <input id="as_date" type="date" name="date" required>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="as_hour">Godzina startu</label>
-                    </th>
-                    <td>
-                        <input id="as_hour" type="time" name="time" required>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="as_type">Typ seansu</label>
-                    </th>
-                    <td>
-                        <select id="as_type">
-                            <option value="2D">2D</option>
-                            <option value="3D">3D</option>
-                            <option value="4D">4D</option>
-                        </select>
+                        <?php
+                        $id = "as_movie";
+                        $name = "ID_Movie";
+                        $default_option = $defaults['as_movie'] ?? '';
+                        $array = $movieRepository->getAllMoviesKV();
+                        include 'components/select.php';
+                        ?>
                     </td>
                 </tr>
                 <tr>
@@ -183,11 +178,35 @@ $languageRepository = new LanguageRepository();
                         <label for="as_hall">Sala</label>
                     </th>
                     <td>
-                        <select id="as_hall">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select>
+                        <?php
+                        $id = "as_hall";
+                        $name = "ID_Hall";
+                        $default_option = $defaults['as_hall'] ?? '';
+                        $array = $hallRepository->getAllHallsKV();
+                        include 'components/select.php';
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="as_type">Typ seansu</label>
+                    </th>
+                    <td>
+                        <?php
+                        $id = "as_type";
+                        $name = "ID_Screening_Type";
+                        $default_option = $defaults['as_type'] ?? '';
+                        $array = $screeningTypeRepository->getAllScreeningTypesKV();
+                        include 'components/select.php';
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="as_date">Data</label>
+                    </th>
+                    <td>
+                        <input id="as_date" type="datetime-local" name="start_time" required>
                     </td>
                 </tr>
                 <tr>

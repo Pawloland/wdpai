@@ -5,6 +5,7 @@ require_once __DIR__ . '/../models/Screening.php';
 
 class ScreeningRepository extends Repository
 {
+    protected const int buffer_minutes = 15;
 
     /**
      * @param DateTime $start
@@ -101,5 +102,21 @@ class ScreeningRepository extends Repository
             'kv' => $kv,
             'data' => $data
         ];
+    }
+
+    public function addScreening(Screening $screening): Screening
+    {
+        return $this->getDBClassTZ(
+            Screening::class,
+            '
+            Select * from new_screening(?, ?, ?, ?, ?)',
+            Database::CLIENT_TIMEZONE,
+            $screening->ID_Movie,
+            $screening->ID_Hall,
+            $screening->ID_Screening_Type,
+            $screening->start_time_string,
+            self::buffer_minutes
+        );
+
     }
 }
