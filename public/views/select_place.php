@@ -69,6 +69,7 @@ $screeningRepository = new ScreeningRepository();
         <?php
         $data = $screeningRepository->getScreeningsByMovieIdAssoc($movie->ID_Movie ?? -1);
         ?>
+        <input type="hidden" name="ID_Movie" value="<?= $movie->ID_Movie ?? -1 ?>" required readonly>
         <div class="room">
             <div class="screen">
                 <p>
@@ -88,28 +89,40 @@ $screeningRepository = new ScreeningRepository();
             <?php
             $skip_label = false;
             $label = 'Data i godzina startu';
-            $name = 'start';
+            $name = 'ID_Screening';
             $id = 'start';
             $array = $data['kv'];
             include 'components/select.php';
             ?>
             <div class="summary">
-                <span>Typ biletu</span>
+                <span>Typ fotela</span>
                 <span>Ilość</span>
             </div>
             <div class="summary specific">
-                <span>Standard</span>
-                <span>0</span>
+                <span>Normalny</span>
+                <span id="seat_std">0</span>
             </div>
             <div class="summary specific">
                 <span>Premium</span>
-                <span>0</span>
+                <span id="seat_pro">0</span>
             </div>
-            <input type="text" placeholder="Wpisz kod rabatowy">
+            <div class="summary specific">
+                <span>Łóżko</span>
+                <span id="seat_bed">0</span>
+            </div>
+            <input id="discount_code" type="text" name="discount_name" placeholder="Wpisz kod rabatowy">
 
             <div class="summary">
                 <span>Suma:</span>
-                <span>90,99zł</span>
+                <span id="sum">0.00</span>
+            </div>
+            <div class="summary discount">
+                <span>Rabat:</span>
+                <span id="disc">0.00</span>
+            </div>
+            <div class="summary discounted">
+                <span>Do zapłaty:</span>
+                <span id="total">0.00</span>
             </div>
             <input type="submit" value="Potwierdzam i płacę">
         </div>

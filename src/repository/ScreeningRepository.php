@@ -3,8 +3,6 @@ require_once 'Repository.php';
 require_once __DIR__ . '/../models/Screening.php';
 
 
-
-
 class ScreeningRepository extends Repository
 {
 
@@ -63,11 +61,11 @@ class ScreeningRepository extends Repository
 
         $kv = [];
         foreach ($data as $screening) {
-            $kv[$screening["ID_Screening"]] = $screening["start_time"];
+            $kv[$screening["ID_Screening"]] = $screening["start_time"] . ' - ' . $screening["screening_name"];
         }
 
         foreach ($data as &$screening) {
-           $screening['seats'] = $this->getDBAssocArray('
+            $screening['seats'] = $this->getDBAssocArray('
                 SELECT 
                     s."ID_Hall",
                     s."ID_Seat",

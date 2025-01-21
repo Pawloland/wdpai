@@ -1,24 +1,43 @@
 const hall_p = document.querySelector(".screen > p:nth-child(1)");
 const type_p = document.querySelector(".screen > p:nth-child(2)");
 const seats_div = document.querySelector("div.seats");
-const standard_tickets_count_span = document.querySelector("div.summary:nth-child(4) > span:nth-child(2)");
-const premium_tickets_count_span = document.querySelector("div.summary:nth-child(5) > span:nth-child(2)");
-const summary_span = document.querySelector("div.summary:nth-child(7) > span:nth-child(2)");
 const start_select = document.querySelector("select#start");
+const standard_tickets_count_span = document.querySelector("span#seat_std");
+const premium_tickets_count_span = document.querySelector("span#seat_pro");
+const bed_tickets_count_span = document.querySelector("span#seat_bed");
+const discount_input = document.querySelector("input#discount_code");
+const summary_span = document.querySelector("span#sum");
+const discount_span = document.querySelector("span#disc");
+const discounted_span = document.querySelector("span#total");
+const VAT = 23;
 
-function input_change(row, number, seat_name, event) {
-    console.log(event.target.checked, event.target.id, row, number, seat_name);
+function input_change(screening, seat, event) {
+    console.log(event.target.checked, event.target.id, seat);
 
-    switch (seat_name) {
+    let summary = parseFloat(summary_span.innerText)
+    let checked = event.target.checked
+    let value = parseFloat(seat.price) + parseFloat(screening.price);
+    value = (1 + VAT / 100) * value;
+    // debugger
+    summary = summary + value * (checked ? 1 : -1)
+    // debugger
+
+    summary_span.innerText = summary.toFixed(2);
+    switch (seat.seat_name) {
         case "standard":
-            standard_tickets_count_span.innerText = parseInt(standard_tickets_count_span.innerText) + (event.target.checked ? 1 : -1);
+            standard_tickets_count_span.innerText = parseInt(standard_tickets_count_span.innerText) + (checked ? 1 : -1);
             break;
         case "premium":
-            premium_tickets_count_span.innerText = parseInt(premium_tickets_count_span.innerText) + (event.target.checked ? 1 : -1);
+            premium_tickets_count_span.innerText = parseInt(premium_tickets_count_span.innerText) + (checked ? 1 : -1);
+            break;
+        case "bed":
+            bed_tickets_count_span.innerText = parseInt(bed_tickets_count_span.innerText) + (checked ? 1 : -1);
             break;
         default:
             break;
     }
+
+
 }
 
 function update_room(screening) {
@@ -53,13 +72,14 @@ function update_room(screening) {
         input.id = `${seat.ID_Seat}`;
         input.className = `seat_${seat.seat_name}`;
         input.type = "checkbox";
-        input.name = `seat`;
+        input.name = `ID_Seat[]`;
+        input.value = seat.ID_Seat;
         input.disabled = seat.is_taken;
         input.checked = seat.is_taken;
 
         // Attach the change event programmatically
         input.addEventListener("change", (event) => {
-            input_change(seat.row, seat.number, seat.seat_name, event);
+            input_change(screening, seat, event);
         });
 
         // Append the input to the cell and the cell to the row
@@ -78,20 +98,61 @@ function update_room(screening) {
 
 
 start_select.addEventListener("change", (event) => {
-
-    // let data = await (await fetch(`/api/places/${event.target.value}`, {
-    //     method: 'POST'
-    // })).json();
     let screening = data.find((screening) => screening.ID_Screening === parseInt(event.target.value));
     update_room(screening);
-    //here we have to update hall seats, hall name, and price
+    summary_span.innerText = '0.00';
+    discount_span.innerText = '0.00';
+    standard_tickets_count_span.innerText = '0';
+    premium_tickets_count_span.innerText = '0';
+    bed_tickets_count_span.innerText = '0';
+    discount_input.value = '';
+
 });
+
+discount_input.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault()
+        let amount = 0
+        const response = await fetch('/getDiscount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'discount_code': event.target.value
+            })
+        });
+
+        if (response.ok) {
+            amount = parseFloat(await response.text());
+        } else {
+            console.error('Failed to fetch discount');
+        }
+        amount = (1 + VAT / 100) * amount;
+        discount_span.innerHTML = amount.toFixed(2);
+    }
+    // event.stopPropagation()
+})
+
+const observer = new MutationObserver(() => {
+    let summary = parseFloat(summary_span.innerText);
+    let discount = parseFloat(discount_span.innerText);
+    let discounted = Math.max(summary - discount, 0);
+    discounted_span.innerText = discounted.toFixed(2);
+});
+
+observer.observe(summary_span, {childList: true, subtree: true});
+observer.observe(discount_span, {childList: true, subtree: true});
+
 
 document.querySelector("form").addEventListener("submit", async (event) => {
     event.preventDefault();
     event.stopPropagation();
-
-    let selected_seats = Array.from(document.querySelectorAll("input[type=checkbox]:checked"))
+    let selected_seats = Array.from(document.querySelectorAll("input[type=checkbox]:checked:not(:disabled)"));
+    if (selected_seats.length === 0) {
+        alert("Nie wybrano miejsc");
+        return
+    }
 
     let one_seat_gaps = false
 
@@ -112,12 +173,45 @@ document.querySelector("form").addEventListener("submit", async (event) => {
             return
         }
     });
+    console.log(event)
+    //print form data to console
+    console.log(new FormData(event.target));
     if (one_seat_gaps) {
         alert("Nie można zostawić 1 wolnego miejsca między rezerwacjami");
         return
     }
-})
 
+    //send fetch post with form data
+    let response = await fetch('/addReservation', {
+        method: 'POST',
+        body: new FormData(event.target)
+    });
+    // Check for a redirect (3xx status)
+    if (response.redirected) {
+        // Reload the page to the new URL
+
+    } else {
+        // Continue with the normal result if no redirect
+        let result = await response.json();
+        console.log(response); // Handle the result if no redirect occurred
+        console.log(result); // Handle the result if no redirect occurred
+        let msg = `Pomyślne rezerwacje dla siedzeń ${JSON.stringify(result.successes)}`;
+        if (result.fails.length > 0) {
+            msg += `\nNieudane rezerwacje dla siedzeń ${JSON.stringify(result.fails)}}`;
+        }
+        alert(msg);
+        data = result.new_data.data
+        update_room(data.find((screening) => screening.ID_Screening === parseInt(start_select.value)));
+        summary_span.innerText = '0.00';
+        discount_span.innerText = '0.00';
+        standard_tickets_count_span.innerText = '0';
+        premium_tickets_count_span.innerText = '0';
+        bed_tickets_count_span.innerText = '0';
+        discount_input.value = '';
+    }
+
+
+})
 
 update_room(data[0]);
 

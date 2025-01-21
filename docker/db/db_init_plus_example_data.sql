@@ -720,8 +720,8 @@ BEGIN
     ELSIF NOT EXISTS (SELECT 1 FROM "Screening" WHERE "ID_Screening" = vidScreening) THEN
         RAISE EXCEPTION 'Nie ma takiego pokazu';
         -- Check if the discount exists
-    ELSIF NOT EXISTS (SELECT 1 FROM "Discount" WHERE "ID_Discount" = vidDiscount) THEN
-        RAISE EXCEPTION 'Nie ma takiej zniżki';
+    ELSIF vidDiscount IS NOT NULL AND NOT EXISTS (SELECT 1 FROM "Discount" WHERE "ID_Discount" = vidDiscount) THEN
+       RAISE EXCEPTION 'Nie ma takiej zniżki';
     ELSE
         -- Get the seat price
         SELECT "price" INTO vSeatPrice
@@ -890,6 +890,7 @@ $$
 DECLARE
     price_netto DECIMAL(10,2);
     errno INT := 0;
+    reservation_record "Reservation"; -- Declare a variable to hold the returned record
 BEGIN
     -- Calculate the price_netto using the provided function
     price_netto := calculate_price(vidSeat, vidScreening, vidDiscount);
@@ -956,7 +957,10 @@ BEGIN
                vAddress_city,
                vAddress_zip
            )
-    RETURNING *;
+    RETURNING *INTO reservation_record;
+
+    -- Return the inserted reservation record
+    RETURN reservation_record;
 
 END;
 $$ LANGUAGE plpgsql;

@@ -5,7 +5,7 @@ class SecurityComponent
 {
     protected const int days = 0;
     protected const int hours = 0;
-    protected const int minutes = 10;
+    protected const int minutes = 90;
 
     protected const string cookie_name = 'auth';
 
@@ -14,6 +14,16 @@ class SecurityComponent
     public function __construct()
     {
         $this->sessionRepository = new SessionRepository();
+    }
+
+    public function getMail(): ?string
+    {
+        if (!isset($_COOKIE[static::cookie_name])
+            or !($auth = json_decode($_COOKIE[static::cookie_name], true))
+            or !isset($auth['email'])) {
+            return null;
+        }
+        return $auth['email'];
     }
 
     public function createAuthCookie(string $email): void
