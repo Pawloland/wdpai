@@ -4,30 +4,49 @@ require_once 'AppController.php';
 require_once __DIR__ . '/../models/Movie.php';
 require_once __DIR__ . '/../repository/MovieRepository.php';
 require_once __DIR__ . '/../../debug_utils.php';
+require_once __DIR__ . '/../components/SecurityComponent.php';
 
 
 class UploadController extends AppController
 {
 
     private MovieRepository $movieRepository;
+    private SecurityComponent $securityComponent;
 
     public function __construct()
     {
         parent::__construct();
         $this->movieRepository = new MovieRepository();
+        $this->securityComponent = new SecurityComponent();
     }
 
     public function admin_panel(): void
     {
+        if (!$this->securityComponent->updateAdminAuthCookie()) {
+            $_SESSION['messages'] = ['message' => 'Najpierw się zaloguj'];
+            header('Location: /adminLogin');
+            return;
+        } //redirect to login page before letting the user access the admin panel if no active session exists
+        if (!$this->isGet()) {
+            $_SESSION['messages'] = ['message' => 'Niepoprawne żądanie'];
+            header('Location: /adminLogin');
+            return;
+        }
         $this->render('admin_panel');
     }
 
     public function upload(): void
     {
+        if (!$this->securityComponent->updateAdminAuthCookie()) {
+            $_SESSION['messages'] = ['message' => 'Najpierw się zaloguj'];
+            header('Location: /adminLogin');
+            return;
+        }
 
         if (!$this->isPost()) {
-            header('Location: /login');
-            $this->render('login');
+            $_SESSION['messages'] = ['message' => 'Niepoprawne żądanie'];
+            header('Location: /adminLogin');
+//            $this->render('login');
 //            $this->userRepository->getAllUsers();
             return;
         }

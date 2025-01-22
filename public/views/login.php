@@ -22,16 +22,18 @@
             </a>
         </li>
         <li>
-            <?php if (isset($_COOKIE['auth'])): ?>
+            <?php if (isset($_COOKIE['auth']) && (!isset($admin_variant) || !$admin_variant)): ?>
                 <a href="/logout">
                     <span class="icon icon-logout"></span>
                     <?= json_decode($_COOKIE['auth'], true)['email'] ?>
                 </a>
             <?php else: ?>
-                <a href="/register">
-                    <span class="icon icon-pen"></span>
-                    Zarejestruj
-                </a>
+                <?php if (!isset($admin_variant) || !$admin_variant): ?>
+                    <a href="/register">
+                        <span class="icon icon-pen"></span>
+                        Zarejestruj
+                    </a>
+                <?php endif; ?>
             <?php endif; ?>
         </li>
     </ul>
@@ -44,9 +46,14 @@
     </ul>
 </header>
 <main>
-    <form class="auth" action="/login" method="post">
-        <label for="email">E-mail:</label>
-        <input id="email" type="email" name="email" value="<?= $defaults['email'] ?? ''; ?>" required>
+    <form class="auth" action="<?= (isset($admin_variant) && $admin_variant) ? '/adminLogin' : '/login' ?>" method="post">
+        <?php if (isset($admin_variant) && $admin_variant): ?>
+            <label for="nick">Nick:</label>
+            <input id="nick" type="text" name="nick" value="<?= $defaults['nick'] ?? ''; ?>" required>
+        <?php else: ?>
+            <label for="email">E-mail:</label>
+            <input id="email" type="email" name="email" value="<?= $defaults['email'] ?? ''; ?>" required>
+        <?php endif; ?>
         <label for="password">Hasło:</label>
         <input id="password" type="password" name="password" required>
         <input type="submit" value="Zaloguj">

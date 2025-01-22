@@ -1,9 +1,3 @@
-<?php
-require_once 'src/repository/ScreeningRepository.php';
-$screeningRepository = new ScreeningRepository();
-
-?>
-
 <!DOCTYPE html>
 
 <head>
@@ -66,9 +60,6 @@ $screeningRepository = new ScreeningRepository();
         ?>
     </div>
     <form class="right">
-        <?php
-        $data = $screeningRepository->getScreeningsByMovieIdAssoc($movie->ID_Movie ?? -1);
-        ?>
         <input type="hidden" name="ID_Movie" value="<?= $movie->ID_Movie ?? -1 ?>" required readonly>
         <div class="room">
             <div class="screen">
@@ -91,7 +82,7 @@ $screeningRepository = new ScreeningRepository();
             $label = 'Data i godzina startu';
             $name = 'ID_Screening';
             $id = 'start';
-            $array = $data['kv'];
+            $array = $data['kv'] ?? [];
             include 'components/select.php';
             ?>
             <div class="summary">
@@ -129,7 +120,7 @@ $screeningRepository = new ScreeningRepository();
     </form>
 </main>
 <script>
-    let data = JSON.parse(`<?= json_encode($data['data']); ?>`)
+    let data = JSON.parse(`<?= json_encode($data['data'] ?? []); ?>`)
 </script>
 
 </body>

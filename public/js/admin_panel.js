@@ -22,8 +22,12 @@ const users_table = document.querySelector("div#users_list>form>table>tbody");
                 method: 'post',
                 body: formData
             })
-            let data = await resp.text()
-            if (resp.status !== 200) {
+            //let data = await resp.text()
+            if (resp.status === 401) {
+                alert("Error: Nie jesteś zalogowany")
+            } else if (resp.status === 403) {
+                alert("Error: Nie masz uprawnień do tej akcji")
+            } else if (resp.status !== 200) {
                 alert("Error: Nie ma takiego elementu, lub inne elementy od niego zależą")
             } else {
                 span.parentElement.parentElement.remove()

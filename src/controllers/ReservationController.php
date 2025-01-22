@@ -41,13 +41,18 @@ class ReservationController extends AppController
                     throw new Exception();
                 }
                 $movie = $this->movieRepository->getMovieById($_GET['ID_Movie']);
+
+                $data = $this->screeningRepository->getScreeningsByMovieIdAssoc($movie->ID_Movie ?? -1);
+                if (empty($data['data'])) {
+                    throw new Exception();
+                }
+
                 $this->render('select_place', [
-                    'messages' => [
-                        'movie' => $movie
-                    ]
+                    'movie' => $movie,
+                    'data' => $data
                 ]);
             } catch (Exception $e) {
-                $_SESSION['messages'] = ['message' => 'Nie znaleziono filmu'];
+                $_SESSION['messages'] = ['message' => 'Nie znaleziono filmu lub seansów'];
                 header('Location: /');
             }
             return;

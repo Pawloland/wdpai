@@ -30,18 +30,14 @@ $screeningTypeRepository = new ScreeningTypeRepository();
         <?= $message ?>
     <?php endif; ?>
     <ul>
-        <li>
-            <a href="/login">
-                <span class="icon icon-pen"></span>
-                Zaloguj
-            </a>
-        </li>
-        <li>
-            <a href="/register">
-                <span class="icon icon-pen"></span>
-                Zarejestruj
-            </a>
-        </li>
+        <?php if (isset($_COOKIE['auth_admin'])): ?>
+            <li>
+                <a href="/adminLogout">
+                    <span class="icon icon-logout"></span>
+                    <?= json_decode($_COOKIE['auth_admin'], true)['nick'] ?>
+                </a>
+            </li>
+        <?php endif; ?>
     </ul>
     <ul>
         <li>
@@ -225,53 +221,6 @@ $screeningTypeRepository = new ScreeningTypeRepository();
         </form>
     </div>
 
-    <!--    <div id="remove_screening">-->
-    <!--        <form action="#" method="post">-->
-    <!--            <table>-->
-    <!--                <tbody>-->
-    <!--                <tr>-->
-    <!--                    <th>-->
-    <!--                        <label for="ds_date">Data</label>-->
-    <!--                    </th>-->
-    <!--                    <td>-->
-    <!--                        <input id="ds_date" type="date" name="date" required>-->
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--                <tr>-->
-    <!--                    <th>-->
-    <!--                        <label for="ds_hour">Godzina startu</label>-->
-    <!--                    </th>-->
-    <!--                    <td>-->
-    <!--                        <input id="ds_hour" type="time" name="time" required>-->
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--                <tr>-->
-    <!--                    <th>-->
-    <!--                        <label for="ds_hall">Sala</label>-->
-    <!--                    </th>-->
-    <!--                    <td>-->
-    <!--                        <select id="ds_hall" name="hall" required>-->
-    <!--                            <option value="1">1</option>-->
-    <!--                            <option value="2">2</option>-->
-    <!--                            <option value="3">3</option>-->
-    <!--                        </select>-->
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--                <tr>-->
-    <!--                    <td colspan="2">-->
-    <!--                        <input type="submit" value="Usuń seans">-->
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--                <tr>-->
-    <!--                    <td colspan="2">-->
-    <!--                        --><?php //= $add_screening ?? ''; ?>
-    <!--                    </td>-->
-    <!--                </tr>-->
-    <!--                </tbody>-->
-    <!--            </table>-->
-    <!--        </form>-->
-    <!--    </div>-->
-
     <?php include 'components/admin_panel/reservations_list.php'; ?>
 
     <?php include 'components/admin_panel/screening_list.php'; ?>
@@ -290,15 +239,6 @@ $screeningTypeRepository = new ScreeningTypeRepository();
     <?php
     $show_clients = false;
     include 'components/admin_panel/sessions_list.php';
-    ?>
-
-
-    <?php
-    if (isset($messages)) {
-        foreach ($messages as $message) {
-            var_dump($message);
-        }
-    }
     ?>
 
 </main>

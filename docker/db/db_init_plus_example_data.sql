@@ -303,15 +303,21 @@ CREATE TABLE "Permissions" (
     "perm_name" VARCHAR(60) NOT NULL,
     UNIQUE ("perm_name")
 );
-ALTER SEQUENCE "Permissions_ID_Perm_seq" RESTART WITH 5;
+ALTER SEQUENCE "Permissions_ID_Perm_seq" RESTART WITH 10;
 
 -- ----------------------------
 -- Records of Permissions
 -- ----------------------------
-INSERT INTO "Permissions" VALUES (1, 'create_reservation');
-INSERT INTO "Permissions" VALUES (3, 'create_screening');
-INSERT INTO "Permissions" VALUES (2, 'modify_reservation');
-INSERT INTO "Permissions" VALUES (4, 'modify_screening');
+-- INSERT INTO "Permissions" VALUES (1, 'create_reservation');
+-- INSERT INTO "Permissions" VALUES (3, 'create_screening');
+-- INSERT INTO "Permissions" VALUES (2, 'modify_reservation');
+-- INSERT INTO "Permissions" VALUES (4, 'modify_screening');
+INSERT INTO "Permissions" VALUES (5, 'removeMovie');
+INSERT INTO "Permissions" VALUES (6, 'removeReservation');
+INSERT INTO "Permissions" VALUES (7, 'removeScreening');
+INSERT INTO "Permissions" VALUES (8, 'removeClient');
+INSERT INTO "Permissions" VALUES (9, 'removeUser');
+
 
 -- ----------------------------
 -- Table structure for Purchase
@@ -509,16 +515,18 @@ CREATE TABLE "User_Type" (
     -- Unique index on "type_name"
     CONSTRAINT "type_name_unique" UNIQUE ("type_name")
 );
-ALTER SEQUENCE "User_Type_ID_User_Type_seq" RESTART WITH 7;
+ALTER SEQUENCE "User_Type_ID_User_Type_seq" RESTART WITH 8;
 
 -- ----------------------------
 -- Records of User_Type
 -- ----------------------------
-INSERT INTO "User_Type" VALUES (1, 'Cashier');
-INSERT INTO "User_Type" VALUES (2, 'Chief operations officer');
-INSERT INTO "User_Type" VALUES (3, 'Manager');
-INSERT INTO "User_Type" VALUES (4, 'Scheduler');
-INSERT INTO "User_Type" VALUES (5, 'Administrator');
+-- INSERT INTO "User_Type" VALUES (1, 'Cashier');
+-- INSERT INTO "User_Type" VALUES (2, 'Chief operations officer');
+-- INSERT INTO "User_Type" VALUES (3, 'Manager');
+-- INSERT INTO "User_Type" VALUES (4, 'Scheduler');
+-- INSERT INTO "User_Type" VALUES (5, 'Administrator');
+INSERT INTO "User_Type" VALUES (6, 'Admin');
+INSERT INTO "User_Type" VALUES (7, 'Employee');
 
 -- ----------------------------
 -- Table structure for User
@@ -541,13 +549,14 @@ ALTER SEQUENCE "User_ID_User_seq" RESTART WITH 7;
 -- ----------------------------
 -- Records of User
 -- ----------------------------
-INSERT INTO "User" VALUES (1, 5, 'Larry', 'Stevens', 'larry_stevens', 'hashed_password1');
-INSERT INTO "User" VALUES (2, 5, 'Luis', 'Boyd', 'luis_boyd', 'hashed_password2');
-INSERT INTO "User" VALUES (3, 5, 'Leroy', 'Moreno', 'leroy_moreno', 'hashed_password3');
-INSERT INTO "User" VALUES (4, 5, 'Anne', 'Butler', 'anne_butler', 'hashed_password4');
-INSERT INTO "User" VALUES (5, 5, 'Marjorie', 'Ruiz', 'marjorie_ruiz', 'hashed_password5');
-INSERT INTO "User" VALUES (6, 5, 'Scott', 'Castillo', 'scott_castillo', 'hashed_password6');
-
+-- INSERT INTO "User" VALUES (1, 5, 'Larry', 'Stevens', 'larry_stevens', 'hashed_password1');
+-- INSERT INTO "User" VALUES (2, 5, 'Luis', 'Boyd', 'luis_boyd', 'hashed_password2');
+-- INSERT INTO "User" VALUES (3, 5, 'Leroy', 'Moreno', 'leroy_moreno', 'hashed_password3');
+-- INSERT INTO "User" VALUES (4, 5, 'Anne', 'Butler', 'anne_butler', 'hashed_password4');
+-- INSERT INTO "User" VALUES (5, 5, 'Marjorie', 'Ruiz', 'marjorie_ruiz', 'hashed_password5');
+-- INSERT INTO "User" VALUES (6, 5, 'Scott', 'Castillo', 'scott_castillo', 'hashed_password6');
+INSERT INTO "User" VALUES (7, 6, 'admin', 'admin', 'admin', '$2y$12$oHBPgN2x397l9ecLwcNdEeB/.1V6TFekvDNckkfmmvmq8Dfr7qFWe');
+INSERT INTO "User" VALUES (8, 7, 'employee', 'employee', 'employee', '$2y$12$cLCGaBNo0hiWN3sMu.FNUOvWgCTar1ZryB605kBTqpdwm9d2uElTy');
 
 -- ----------------------------
 -- Table structure for UserType_Permissions
@@ -567,20 +576,26 @@ CREATE INDEX "ID_Perm" ON "UserType_Permissions" ("ID_perm");
 -- ----------------------------
 -- Records of UserType_Permissions
 -- ----------------------------
-INSERT INTO "UserType_Permissions" VALUES (1, 1);
-INSERT INTO "UserType_Permissions" VALUES (1, 2);
-INSERT INTO "UserType_Permissions" VALUES (2, 1);
-INSERT INTO "UserType_Permissions" VALUES (2, 2);
-INSERT INTO "UserType_Permissions" VALUES (2, 3);
-INSERT INTO "UserType_Permissions" VALUES (3, 1);
-INSERT INTO "UserType_Permissions" VALUES (3, 2);
-INSERT INTO "UserType_Permissions" VALUES (4, 3);
-INSERT INTO "UserType_Permissions" VALUES (3, 3);
-INSERT INTO "UserType_Permissions" VALUES (4, 4);
-INSERT INTO "UserType_Permissions" VALUES (5, 3);
-INSERT INTO "UserType_Permissions" VALUES (5, 4);
-INSERT INTO "UserType_Permissions" VALUES (5, 1);
-
+-- INSERT INTO "UserType_Permissions" VALUES (1, 1);
+-- INSERT INTO "UserType_Permissions" VALUES (1, 2);
+-- INSERT INTO "UserType_Permissions" VALUES (2, 1);
+-- INSERT INTO "UserType_Permissions" VALUES (2, 2);
+-- INSERT INTO "UserType_Permissions" VALUES (2, 3);
+-- INSERT INTO "UserType_Permissions" VALUES (3, 1);
+-- INSERT INTO "UserType_Permissions" VALUES (3, 2);
+-- INSERT INTO "UserType_Permissions" VALUES (4, 3);
+-- INSERT INTO "UserType_Permissions" VALUES (3, 3);
+-- INSERT INTO "UserType_Permissions" VALUES (4, 4);
+-- INSERT INTO "UserType_Permissions" VALUES (5, 3);
+-- INSERT INTO "UserType_Permissions" VALUES (5, 4);
+-- INSERT INTO "UserType_Permissions" VALUES (5, 1);
+--type Admin permissions removeMovie, removeReservation, removeScreening, removeClient, removeUser
+INSERT INTO "UserType_Permissions" VALUES (6, 5);
+INSERT INTO "UserType_Permissions" VALUES (6, 6);
+INSERT INTO "UserType_Permissions" VALUES (6, 7);
+INSERT INTO "UserType_Permissions" VALUES (6, 8);
+INSERT INTO "UserType_Permissions" VALUES (6, 9);
+--type Employee permissions - none
 
 
 
