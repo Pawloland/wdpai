@@ -48,7 +48,7 @@ class ReservationController extends AppController
                 }
 
                 $this->render('select_place', [
-                    'movie' => $movie,
+                    'messages' => ['movie' => $movie],
                     'data' => $data
                 ]);
             } catch (Exception $e) {
