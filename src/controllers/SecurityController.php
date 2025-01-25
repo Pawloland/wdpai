@@ -1,23 +1,22 @@
 <?php
 
 require_once 'AppController.php';
-require_once __DIR__ . '/../models/Client.php';
-require_once __DIR__ . '/../repository/ClientRepository.php';
 require_once __DIR__ . '/../components/SecurityComponent.php';
-require_once __DIR__ . '/../repository/UserRepository.php';
+require_once __DIR__ . '/../components/ClientComponent.php';
+require_once __DIR__ . '/../components/UserComponent.php';
 
 class SecurityController extends AppController
 {
-    private ClientRepository $clientRepository;
     private SecurityComponent $securityComponent;
-    private UserRepository $userRepository;
+    private ClientComponent $clientComponent;
+    private UserComponent $userComponent;
 
     public function __construct()
     {
         parent::__construct();
-        $this->clientRepository = new ClientRepository();
         $this->securityComponent = new SecurityComponent();
-        $this->userRepository = new UserRepository();
+        $this->clientComponent = new ClientComponent();
+        $this->userComponent = new UserComponent();
     }
 
 
@@ -44,14 +43,16 @@ class SecurityController extends AppController
             return;
         }
 
-        $client = $this->clientRepository->getClient($email);
-        if (!$client || !password_verify($password, $client->password_hash)) { //user does not exist or password is incorrect
+
+        $result = $this->clientComponent->verifyClient($email, $password);
+        if (!$result) {
             $this->render('login', [
                 'message' => 'Niepoprawny email lub hasło',
                 'defaults' => ['email' => $email]
             ]);
             return;
         }
+
 
         $this->securityComponent->createAuthCookie($email);
 
@@ -85,8 +86,9 @@ class SecurityController extends AppController
             return;
         }
 
-        $user = $this->userRepository->getUser($nick);
-        if (!$user || !password_verify($password, $user->password_hash)) { //user does not exist or password is incorrect
+
+        $result = $this->userComponent->verifyUser($nick, $password);
+        if (!$result) {
             $this->render('login', [
                 'admin_variant' => true,
                 'message' => 'Niepoprawny email lub hasło',
@@ -149,17 +151,9 @@ class SecurityController extends AppController
             ]);
             return;
         }
-        // generate password hash using bcrypt
-        $hash = password_hash($password, PASSWORD_BCRYPT);
-        $user = new Client(
-            nick: $email,
-            password_hash: $hash,
-            mail: $email
-        );
 
-        try {
-            $this->clientRepository->addClient($user);
-        } catch (Exception $e) {
+        $result = $this->clientComponent->addClient($email, $password);
+        if (!$result) {
             $this->render('register', [
                 'message' => 'Użytkownik o podanym adresie email już istnieje',
                 'defaults' => ['email' => $email]
