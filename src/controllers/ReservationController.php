@@ -2,10 +2,6 @@
 
 require_once 'AppController.php';
 require_once __DIR__ . '/../components/SecurityComponent.php';
-require_once __DIR__ . '/../repository/MovieRepository.php';
-require_once __DIR__ . '/../repository/ReservationRepository.php';
-require_once __DIR__ . '/../repository/ClientRepository.php';
-require_once __DIR__ . '/../repository/ScreeningRepository.php';
 require_once __DIR__ . '/../components/DiscountComponent.php';
 require_once __DIR__ . '/../components/ReservationComponent.php';
 require_once __DIR__ . '/../components/ScreeningComponent.php';
@@ -14,10 +10,6 @@ class ReservationController extends AppController
 {
 
     private SecurityComponent $securityComponent;
-//    private MovieRepository $movieRepository;
-//    private ReservationRepository $reservationRepository;
-//    private ClientRepository $clientRepository;
-//    private ScreeningRepository $screeningRepository;
     private DiscountComponent $discountComponent;
     private ReservationComponent $reservationComponent;
     private  ScreeningComponent $screeningComponent;
@@ -26,10 +18,6 @@ class ReservationController extends AppController
     {
         parent::__construct();
         $this->securityComponent = new SecurityComponent();
-//        $this->movieRepository = new MovieRepository();
-//        $this->reservationRepository = new ReservationRepository();
-//        $this->clientRepository = new ClientRepository();
-//        $this->screeningRepository = new ScreeningRepository();
         $this->discountComponent = new DiscountComponent();
         $this->reservationComponent = new ReservationComponent();
         $this->screeningComponent = new ScreeningComponent();

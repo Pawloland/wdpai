@@ -7,6 +7,8 @@ require_once __DIR__ . '/../repository/ScreeningRepository.php';
 require_once __DIR__ . '/../repository/ClientRepository.php';
 require_once __DIR__ . '/../repository/UserRepository.php';
 require_once __DIR__ . '/../components/SecurityComponent.php';
+require_once __DIR__ . '/../components/MovieComponent.php';
+require_once __DIR__ . '/../components/ScreeningComponent.php';
 
 class AdminController extends AppController
 {
@@ -17,6 +19,8 @@ class AdminController extends AppController
     private ClientRepository $clientRepository;
     private UserRepository $userRepository;
     private SecurityComponent $securityComponent;
+    private MovieComponent $movieComponent;
+    private ScreeningComponent $screeningComponent;
 
     public function __construct()
     {
@@ -27,6 +31,8 @@ class AdminController extends AppController
         $this->clientRepository = new ClientRepository();
         $this->userRepository = new UserRepository();
         $this->securityComponent = new SecurityComponent();
+        $this->movieComponent = new MovieComponent();
+        $this->screeningComponent = new ScreeningComponent();
     }
 
 
@@ -95,7 +101,6 @@ class AdminController extends AppController
     }
 
 
-
     public function admin_panel(): void
     {
         if (!$this->securityComponent->updateAdminAuthCookie()) {
@@ -122,8 +127,6 @@ class AdminController extends AppController
         if (!$this->isPost()) {
             $_SESSION['messages'] = ['message' => 'Niepoprawne żądanie'];
             header('Location: /adminLogin');
-//            $this->render('login');
-//            $this->userRepository->getAllUsers();
             return;
         }
         $messages = [];
@@ -168,26 +171,20 @@ class AdminController extends AppController
         }
 
 
-        $movie = new Movie(
-            title: $title,
-            original_title: $original_title,
-            description: $description,
-            ID_Language: $language,
-            ID_Dubbing: $dubbing,
-            ID_Subtitles: $subtitles
+        $messages['upload'] = '';
+        $result = $this->movieComponent->addMovie(
+            $title,
+            $original_title,
+            $duration,
+            $description,
+            $language,
+            $dubbing,
+            $subtitles,
+            $messages['upload']
         );
-        $movie->duration = $duration; // the set property hook will convert the string to DateTime object, but the constructor will not call property hooks
-        // so we need to set the duration manually after the object is created with the default value of new DateTime('1979-01-01 00:00:00') in the constructor
-        $movie = $this->movieRepository->addMovie($movie);
 
-        //save the image to the server
-
-        $target_file = "public/img/posters/" . $movie->poster;
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            $messages["upload"] = "The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.";
+        if ($result) {
             unset($messages['defaults']);
-        } else {
-            $messages["upload"] = "Sorry, there was an error uploading your file.";
         }
 
         $_SESSION['messages'] = $messages;
@@ -210,16 +207,14 @@ class AdminController extends AppController
         }
 
 
-        $screening = new Screening(
-            ID_Movie: intval($_POST['ID_Movie']),
-            ID_Hall: intval($_POST['ID_Hall']),
-            ID_Screening_Type: intval($_POST['ID_Screening_Type']),
-            start_time: new DateTime($_POST['start_time'], new DateTimeZone(Database::CLIENT_TIMEZONE))
-        ); // assume it is in local time - Database::CLIENT_TIMEZONE
+        $result = $this->screeningComponent->addScreening(
+            intval($_POST['ID_Movie']),
+            intval($_POST['ID_Hall']),
+            intval($_POST['ID_Screening_Type']),
+            $_POST['start_time']
+        );
 
-        try {
-            $new_screening = $this->screeningRepository->addScreening($screening);
-        } catch (Exception $e) {
+        if (!$result) {
             $_SESSION['messages'] = ['message' => 'Nie udało się dodać seansu'];
             header('Location: /admin_panel');
             return;
