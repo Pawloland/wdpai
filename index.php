@@ -24,7 +24,7 @@ Router::post('getDiscount', 'ReservationController');
 Router::post('addReservation', 'ReservationController');
 Router::post('upload', 'AdminController');
 Router::post('admin_panel', 'AdminController');
-Router::post('addScreening', 'ScreeningController');
+Router::post('addScreening', 'AdminController');
 Router::post('removeMovie', 'AdminController');
 Router::post('removeReservation', 'AdminController');
 Router::post('removeScreening', 'AdminController');

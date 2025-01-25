@@ -196,4 +196,36 @@ class AdminController extends AppController
 
     }
 
+    public function addScreening(): void
+    {
+        if (!$this->isPost()) {
+            header('Location: /admin_panel');
+            return;
+        }
+
+        if (!isset($_POST['ID_Movie']) || !isset($_POST['ID_Hall']) || !isset($_POST['ID_Screening_Type']) || !isset($_POST['start_time'])) {
+            $_SESSION['messages'] = ['message' => 'Niepoprawne żądanie'];
+            header('Location: /admin_panel');
+            return;
+        }
+
+
+        $screening = new Screening(
+            ID_Movie: intval($_POST['ID_Movie']),
+            ID_Hall: intval($_POST['ID_Hall']),
+            ID_Screening_Type: intval($_POST['ID_Screening_Type']),
+            start_time: new DateTime($_POST['start_time'], new DateTimeZone(Database::CLIENT_TIMEZONE))
+        ); // assume it is in local time - Database::CLIENT_TIMEZONE
+
+        try {
+            $new_screening = $this->screeningRepository->addScreening($screening);
+        } catch (Exception $e) {
+            $_SESSION['messages'] = ['message' => 'Nie udało się dodać seansu'];
+            header('Location: /admin_panel');
+            return;
+        }
+        $_SESSION['messages'] = ['message' => 'Dodano seans'];
+        header('Location: /admin_panel');
+    }
+
 }
