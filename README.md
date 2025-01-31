@@ -25,3 +25,13 @@ For administration:
 
 - <a href="http://localhost:8080/admin_panel">http://localhost:8080/admin_panel</a> - Admin panel page
 - <a href="http://localhost:8080/adminLogout">http://localhost:8080/adminLogout</a> - Admin logout page
+
+## Screenshots
+
+| Page Name       | Desktop Screenshot                                                                                      | Mobile Screenshot                                                                                                         |
+|-----------------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Select movie    | ![Select movie](readme_screenshots/SELECT_MOVIE_PAGE.png)                                               | ![Select movie](readme_screenshots/SELECT_MOVIE_PAGE_m1.png) ![Select movie](readme_screenshots/SELECT_MOVIE_PAGE_m2.png) |
+| Register        | ![Register](readme_screenshots/REGISTER_PAGE.png)                                                       | ![Register](readme_screenshots/REGISTER_PAGE_m.png)                                                                       |
+| Login           | ![Login](readme_screenshots/LOGIN_PAGE.png)                                                             | ![Login](readme_screenshots/LOGIN_PAGE_m.png)                                                                             |
+| Select place    | ![Select place](readme_screenshots/SELECT_PLACE_PAGE.png)                                               | ![Select place](readme_screenshots/SELECT_PLACE_PAGE_m.png)                                                               |
+| Admin Panel     | ![Admin Panel](readme_screenshots/ADMIN_PAGE_1.png) ![Admin Panel](readme_screenshots/ADMIN_PAGE_2.png) | ![Admin Panel](readme_screenshots/ADMIN_PAGE_m.png)                                                                       |
